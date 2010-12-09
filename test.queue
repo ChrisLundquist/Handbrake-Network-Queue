@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<ArrayOfJob xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Job>
+    <Id>0</Id>
+    <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D1" -t 1 --angle 1 -c 1-4 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D1-1.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D1-1-1-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
+    <CustomQuery>false</CustomQuery>
+    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D1</Source>
+    <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D1-1.m4v</Destination>
+  </Job>
+  <Job>
+    <Id>1</Id>
+    <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D1" -t 3 --angle 1 -c 1-5 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D1-3.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D1-3-3-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
+    <CustomQuery>false</CustomQuery>
+    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D1</Source>
+    <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D1-3.m4v</Destination>
+  </Job>
+  <Job>
+    <Id>2</Id>
+    <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D1" -t 4 --angle 1 -c 1-7 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D1-4.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D1-4-4-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
+    <CustomQuery>false</CustomQuery>
+    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D1</Source>
+    <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D1-4.m4v</Destination>
+  </Job>
+  <Job>
+    <Id>3</Id>
+    <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D2" -t 1 --angle 1 -c 1-6 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D2-1.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D2-1-1-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
+    <CustomQuery>false</CustomQuery>
+    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D2</Source>
+    <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D2-1.m4v</Destination>
+  </Job>
+  <Job>
+    <Id>4</Id>
+    <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D2" -t 3 --angle 1 -c 1-5 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D2-3.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D2-3-3-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
+    <CustomQuery>false</CustomQuery>
+    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D2</Source>
+    <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D2-3.m4v</Destination>
+  </Job>
+  <Job>
+    <Id>5</Id>
+    <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D2" -t 4 --angle 1 -c 1-5 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D2-4.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D2-4-4-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
+    <CustomQuery>false</CustomQuery>
+    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D2</Source>
+    <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D2-4.m4v</Destination>
+  </Job>
+  <Job>
+    <Id>6</Id>
+    <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D2" -t 5 --angle 1 -c 1-5 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D2-5.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D2-5-5-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
+    <CustomQuery>false</CustomQuery>
+    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D2</Source>
+    <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D2-5.m4v</Destination>
+  </Job>
+  <Job>
+    <Id>7</Id>
+    <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D3" -t 1 --angle 1 -c 1-5 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D3-1.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D3-1-1-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
+    <CustomQuery>false</CustomQuery>
+    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D3</Source>
+    <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D3-1.m4v</Destination>
+  </Job>
+  <Job>
+    <Id>8</Id>
+    <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D3" -t 3 --angle 1 -c 1-6 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D3-3.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D3-3-3-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
+    <CustomQuery>false</CustomQuery>
+    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D3</Source>
+    <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D3-3.m4v</Destination>
+  </Job>
+  <Job>
+    <Id>9</Id>
+    <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D3" -t 4 --angle 1 -c 1-5 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D3-4.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D3-4-4-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
+    <CustomQuery>false</CustomQuery>
+    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D3</Source>
+    <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D3-4.m4v</Destination>
+  </Job>
+  <Job>
+    <Id>10</Id>
+    <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D3" -t 5 --angle 1 -c 1-5 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D3-5.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D3-5-5-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
+    <CustomQuery>false</CustomQuery>
+    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D3</Source>
+    <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D3-5.m4v</Destination>
+  </Job>
+  <Job>
+    <Id>11</Id>
+    <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D4" -t 1 --angle 1 -c 1-5 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D4-1.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D4-1-1-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
+    <CustomQuery>false</CustomQuery>
+    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D4</Source>
+    <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D4-1.m4v</Destination>
+  </Job>
+  <Job>
+    <Id>12</Id>
+    <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D4" -t 3 --angle 1 -c 1-5 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D4-3.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D4-3-3-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
+    <CustomQuery>false</CustomQuery>
+    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D4</Source>
+    <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D4-3.m4v</Destination>
+  </Job>
+  <Job>
+    <Id>13</Id>
+    <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D4" -t 4 --angle 1 -c 1-5 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D4-4.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D4-4-4-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
+    <CustomQuery>false</CustomQuery>
+    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D4</Source>
+    <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D4-4.m4v</Destination>
+  </Job>
+  <Job>
+    <Id>14</Id>
+    <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D4" -t 5 --angle 1 -c 1-5 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D4-5.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D4-5-5-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
+    <CustomQuery>false</CustomQuery>
+    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D4</Source>
+    <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D4-5.m4v</Destination>
+  </Job>
+</ArrayOfJob>
