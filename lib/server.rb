@@ -1,12 +1,14 @@
 #!/usr/bin/env ruby
 
-require 'socket'
+require 'socket'  # TCPServer
+require './lib/job'     # Job
+require 'rexml/document' # REXML::Document to parse XML without gems
 
 PORT = 4444
 class Server
-    attr_reader :server, :queue_file
+    attr_reader :server, :queue_file, :job_queue
 
-    def initialize(queue_file)
+    def initialize(queue_file, port = PORT)
         case queue_file
         when File
             new_from_file(queue_file)
@@ -17,7 +19,8 @@ class Server
             expected File or String of the path to the file"
         end
 
-        @server = TCPServer.new(PORT)
+        @server = TCPServer.new(port)
+        parse_queue_file()
     end
 
     def serve_client
@@ -43,4 +46,12 @@ class Server
         # Nothing to do for now
     end
 
+    def parse_queue_file
+        document = REXML::Document.new(@queue_file.read)
+        @queue_file.rewind
+        # Populate our job queue from the queue_file we were given
+        document.elements.each("ArrayOfJob/Job") do |job|
+            @job_queue.push(Job.new(job))  
+        end
+    end
 end
