@@ -1,16 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'socket'
+require './lib/client.rb'
 
-HOST = "Mjolnir"
-PORT = 4444
+#TODO Parse ARGV? or should the client Class handle that?
 
-
-def main
-    server = TCPSocket.open(HOST,PORT)
-    f = File.new("test.queue","w")
-    f.write(server.read)
-    server.close
-    f.close
-end
-main
+Client.new.run

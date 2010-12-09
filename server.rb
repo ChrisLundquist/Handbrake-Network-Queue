@@ -1,18 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'socket'
+require './lib/server.rb'
 
-puts RUBY_VERSION
-PORT = 4444
+#TODO Handle ARGV? or should Server class?
 
-def main
-    server = TCPServer.new(PORT)
-    f = File.open("test.queue")
-    loop{
-        client = server.accept
-        client.puts(f.read)
-        f.rewind
-        client.close
-    }
-end
-main()
+Server.new("./test/test.queue").run
