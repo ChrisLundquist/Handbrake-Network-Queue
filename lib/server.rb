@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'socket'  # TCPServer
+require 'yaml'    # YAML
 require './lib/job'      # Job
 require './lib/job_queue' # The control structure for the jobs.
 
@@ -28,7 +29,7 @@ class Server
     # XXX TODO XXX check that the client is on the local subnet. E.G. 10. address or 192.168 address
     def serve_client
         client = @server.accept
-        client.puts(@job_queue.next_job)
+        client.puts(@job_queue.next_job.to_yaml)
         client.close
     end
 
