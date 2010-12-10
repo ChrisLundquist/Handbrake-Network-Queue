@@ -49,18 +49,18 @@ class Job
 
     private
     def get_id_from_xml
-        @xml[ID_INDEX].text
+        @xml[ID_INDEX].text.to_s
     end
 
     def get_query_from_xml
-        @xml[QUERY_INDEX].text
+        @xml[QUERY_INDEX].text.to_s
     end
 
     def get_source_from_xml
-        @xml[SOURCE_INDEX].text
+        @xml[SOURCE_INDEX].text.to_s
     end
 
     def get_destination_from_xml
-        @xml[DESTINATION_INDEX].text
+        @xml[DESTINATION_INDEX].text.to_s
     end
 end
