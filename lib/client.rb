@@ -33,7 +33,9 @@ class Client
 
     def get_job
         f = File.new("test.job","w")
-        job = YAML.load(server.read)
+        response = server.read
+        puts response.inspect
+        job = YAML.load(response)
         f.write(job.to_yaml)
         f.close
         @server.close
