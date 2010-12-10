@@ -32,6 +32,11 @@ class Job
         @query = get_query_from_xml()
         @source = get_source_from_xml()
         @destination = get_destination_from_xml()
+
+        # We have to nuke the XML because it screws up serialization when
+        # we try to send it to the client. because its REXML::Element nested
+        # doom crap.
+        @xml = nil
     end
 
     def new?
