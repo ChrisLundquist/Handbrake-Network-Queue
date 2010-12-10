@@ -40,7 +40,7 @@ class Job
 
     def checkout!
       raise "Invalid checkout of complete job" if complete?
-      @status = CHECKOUT_OUT
+      @status = CHECKED_OUT
     end
 
     def complete?
