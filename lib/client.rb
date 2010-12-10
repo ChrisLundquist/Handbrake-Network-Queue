@@ -1,6 +1,7 @@
 
 require 'socket'    # So we can connect to the server
 require './lib/job' # Check out Job objects from the servr
+require 'yaml'
 
 HOST = "Mjolnir"
 PORT = 4444
@@ -31,10 +32,11 @@ class Client
     end
 
     def get_job
-        f = File.new("test.queue","w")
-        f.write(server.read)
-        @server.close
+        f = File.new("test.job","w")
+        job = YAML.load(server.read)
+        f.write(job.to_yaml)
         f.close
+        @server.close
     end
 
     def do_job()

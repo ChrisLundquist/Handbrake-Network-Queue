@@ -16,6 +16,14 @@ class JobQueue
         parse_queue_file()
     end
 
+    def next_job
+        job = @jobs.select { |i| i.new? }.first
+        if job
+            job.checkout!
+            return job
+        end
+    end
+
     private
     def parse_queue_file
         document = REXML::Document.new(@queue_file.read)

@@ -28,8 +28,7 @@ class Server
     # XXX TODO XXX check that the client is on the local subnet. E.G. 10. address or 192.168 address
     def serve_client
         client = @server.accept
-        client.puts(@queue_file.read)
-        @queue_file.rewind
+        client.puts(@job_queue.next_job)
         client.close
     end
 

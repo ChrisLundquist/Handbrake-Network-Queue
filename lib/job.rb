@@ -12,6 +12,12 @@ class Job
     QUERY_INDEX = 3
     SOURCE_INDEX = 7
     DESTINATION_INDEX = 9
+
+    # Numbers are arbitrary
+    NEW = 0x42
+    CHECKED_OUT = 0x43
+    COMPLETE = 0x44
+    CANCELED = 0x45
     def initialize(job_xml)
         @xml = case job_xml
                when String
@@ -21,12 +27,27 @@ class Job
                else
                    raise "Unsupport constructor from class #{job_xml.class}"
                end
+        @status = NEW
         @id = get_id_from_xml()
         @query = get_query_from_xml()
         @source = get_source_from_xml()
         @destination = get_destination_from_xml()
     end
 
+    def new?
+        return @status == NEW
+    end
+
+    def checkout!
+      raise "Invalid checkout of complete job" if complete?
+      @status = CHECKOUT_OUT
+    end
+
+    def complete?
+      return @status == COMPLETE
+    end
+
+    private
     def get_id_from_xml
         @xml[ID_INDEX].text
     end
