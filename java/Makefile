@@ -1,7 +1,7 @@
 #%.class: %.java
 #	javac -sourcepath ./src/ -d ./bin/ $<
 
-.PHONY: client server clean all test
+.PHONY: clean test client server all
 
 bin/%.class: src/%.java bin
 	javac -sourcepath ./src -classpath ./bin -d ./bin $<
