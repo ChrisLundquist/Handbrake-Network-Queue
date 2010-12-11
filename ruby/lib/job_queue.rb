@@ -1,7 +1,7 @@
 require 'rexml/document'
 require './lib/job'
 class JobQueue
-    attr_reader :jobs,:queue_file
+    attr_reader :jobs, :queue_file
 
     def initialize(queue_file)
         @jobs = Array.new
