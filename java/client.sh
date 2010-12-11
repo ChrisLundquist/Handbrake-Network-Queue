@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-java -cp ./bin/ Client
+java -cp ./bin/ Client $@
