@@ -2,12 +2,20 @@
 import java.net.*; // ServerSocket, Socket
 import java.io.*;  // PrintWriter BufferedReader InputStreamReader
 public class Server {
-    public static void main(String[] args){
-        System.out.println("Hello World");
-        run();
+    boolean listening;
+    int port;
+    ServerSocket server;
+
+    Server(int port){
+        listening = true;
+        this.port = port;
     }
 
-    static void run(){
+    void stop(){
+        listening = false;
+    }
+    
+    void start(){
         ServerSocket server = null;
         // Try to establish a server
         try {
@@ -18,38 +26,17 @@ public class Server {
         }
 
         // If we get a connection assign it to the client socket
-        Socket client = null;
         try {
-            // Blocking accept
-            client = server.accept();
+            while(listening)
+                (new ServerThread(server.accept())).run();
         } catch (IOException e) {
             System.err.println("Accept failed: 4444");
             System.exit(-1);
         }
+    }
 
-        // Have to declare them here for scope
-        PrintWriter out = null;
-        BufferedReader in = null;
-        try {
-            // Java stupidity declaring objects for objects
-            out = new PrintWriter( client.getOutputStream(), true);
-            in = new BufferedReader( new InputStreamReader( client.getInputStream())); 
-        } catch(IOException e){
-            System.err.println("Failed to allocate resources to use Socket");
-            System.err.println(e);
-            System.exit(-2);
-        }
-
-        String inputLine, outputLine;
-        try {
-            while ((inputLine = in.readLine()) != null){
-                System.out.println(inputLine);
-                out.println("ack");
-            }
-        } catch(IOException e){
-            System.err.println("Exception while reading from socket");
-            System.err.println(e);
-            System.exit(-3);
-        }
+    public static void main(String[] args){
+        Server server = new Server(4444);
+        server.start();
     }
 }

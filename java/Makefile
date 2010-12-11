@@ -6,9 +6,12 @@
 bin/%.class: src/%.java bin
 	javac -sourcepath ./src -classpath ./bin -d ./bin $<
 
-client: bin/Job.class bin/JobQueue.class bin/Client.class
+client: bin bin/Job.class bin/JobQueue.class bin/Client.class
 
-server: bin/Job.class bin/JobQueue.class bin/Server.class
+server: bin bin/Job.class bin/JobQueue.class bin/Server.class bin/ServerThread.class
+
+bin:
+	mkdir bin/
 
 all: client server
 
