@@ -9,8 +9,7 @@ public class JobQueue {
     private XMLEncoder out;
 
     JobQueue(String filePath) throws IOException{
-        in = new XMLDecoder(new BufferedInputStream(new FileInputStream(filePath)));
-        System.out.println(in);
+        parseFile(filePath);
     }
 
     public Job getNextJob(){
@@ -26,5 +25,11 @@ public class JobQueue {
         }
         // We couldn't find a job
         return null;
+    }
+
+    private Document parseFile(String filePath){
+        in = new XMLDecoder(new BufferedInputStream(new FileInputStream(filePath)));
+        System.out.println(in);
+
     }
 }
