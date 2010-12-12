@@ -4,6 +4,7 @@ require 'socket'  # TCPServer
 require 'yaml'    # YAML
 require './lib/job'      # Job
 require './lib/job_queue' # The control structure for the jobs.
+require './lib/command'
 
 PORT = 4444
 class Server
@@ -29,8 +30,32 @@ class Server
     # XXX TODO XXX check that the client is on the local subnet. E.G. 10. address or 192.168 address
     def serve_client
         client = @server.accept
+
+        case client.read()
+        when Command::GET_JOB
+          get_job()
+        when Command::CHECKOUT_JOB
+          checkout_job()
+        when Command::COMPLETE_JOB
+          complete_job()
+        else
+            STDERR.puts "unkown command"
+        end
         client.puts(@job_queue.next_job.to_yaml)
         client.close
+    end
+
+    def get_job
+      puts "client has requested a job"
+
+    end
+
+    def checkout_job
+      puts "client has checked out a job"
+    end
+
+    def complete_job
+      puts "client has completed a job"
     end
 
     # The main running loop of the server.
