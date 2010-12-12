@@ -9,7 +9,7 @@ public class Client {
     PrintWriter out = null;
     BufferedReader in = null;
 
-    // If only Java had defailt parameters instead of making
+    // If only Java had default parameters instead of making
     // reference chains
     Client(String remote_host){
         this(remote_host,DEFAULT_PORT);
@@ -17,7 +17,7 @@ public class Client {
 
     Client(String remote_host, int remote_port) {
         this.remote_port = remote_port;
-        this.remote_host = this.remote_host;
+        this.remote_host = remote_host;
     }
 
     static public void main(String[] args){
@@ -46,10 +46,10 @@ public class Client {
             out = new PrintWriter(server.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(server.getInputStream()));
         } catch (UnknownHostException e) {
-            System.err.println("Don't know about host: taranis.");
+            System.err.println("Don't know about host: " + remote_host);
             System.exit(1);
         } catch (IOException e) {
-            System.err.println("Couldn't get I/O for the connection to: taranis.");
+            System.err.println("Couldn't get I/O for the connection to: " + remote_host);
             System.exit(1);
         }
         System.out.println("Connected to server");

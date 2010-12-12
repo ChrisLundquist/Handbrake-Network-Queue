@@ -21,7 +21,7 @@ class ServerThread extends Thread {
             System.exit(-2);
         }
 
-        String inputLine, outputLine;
+        String inputLine;
         try {
             while ((inputLine = in.readLine()) != null){
                 System.out.println(inputLine);
