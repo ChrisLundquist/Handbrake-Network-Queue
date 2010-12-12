@@ -1,6 +1,7 @@
 
 require 'socket'    # So we can connect to the server
 require './lib/job' # Check out Job objects from the servr
+require './lib/command.rb'
 require 'yaml'
 
 HOST = "Mjolnir"
@@ -22,19 +23,26 @@ class Client
         connect()
         get_job()
         do_job()
+        complete_job()
+        disconnect()
     end
 
     private
+
+    def disconnect
+        @server.close
+    end
 
     def connect(host = HOST, port = PORT)
         @server = TCPSocket.open(host,port)
         raise "Unable to connect to #{host}:#{port}" unless @server
     end
 
-    def get_job
+    def get_job()
+        puts "getting job withh command: #{Command::GET_JOB}"
+        @server.print(Command::GET_JOB)
         f = File.new("test.job","w")
-        response = server.read
-        puts response.inspect
+        response = @server.read
         job = YAML.load(response)
         f.write(job.to_yaml)
         f.close
@@ -42,5 +50,10 @@ class Client
     end
 
     def do_job()
+        #TODO 
+    end
+
+    def complete_job()
+        @server.print(Command::COMPLETE_JOB)
     end
 end
