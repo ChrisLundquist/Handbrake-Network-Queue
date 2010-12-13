@@ -45,26 +45,27 @@ class Job
     end
 
     def checkout!
-      raise "Invalid checkout of complete job" if complete?
-      @checked_out_at = Time.now
-      @status = CHECKED_OUT
+        raise "Invalid checkout of complete job" if complete?
+        @checked_out_at = Time.now
+        @status = CHECKED_OUT
     end
 
     def checked_out?
-      @status == CHECKED_OUT
+        @status == CHECKED_OUT
     end
 
     def complete?
-      return @status == COMPLETE
+        @status == COMPLETE
     end
 
     def complete!
-      @status = Complete
+      puts "job completed"
+        @status = COMPLETE
     end
 
     private
     def get_id_from_xml
-        @xml[ID_INDEX].text.to_s
+        @xml[ID_INDEX].text.to_i
     end
 
     def get_query_from_xml

@@ -16,7 +16,8 @@ class ServerThread
         when ""
             # They closed the socket
         else
-            STDERR.puts "unkown command: #{command.inspect}"
+            STDERR.puts "unknown command: #{command.inspect}"
+            @client.write(Command::UNKNOWN)
         end
         @client.close
     end
@@ -26,18 +27,21 @@ class ServerThread
         puts "client has requested a job"
         job = @queue.next_job()
         if job
-          @client.write(job.to_yaml)
+            @client.write(job.to_yaml)
         else
-          @client.write(Command::NO_JOB)
+            @client.write(Command::NO_JOB)
+            STDERR.puts "No new jobs left..."
         end
     end
 
     def checkout_job
-        puts "client has checked out a job"
+        id = @client.recvmsg.first
+        queue.checkout(id)
+        puts "client has checked out job id #{id}"
     end
 
     def complete_job
-      id = @client.recvmsg.first
+        id = @client.recvmsg.first
         puts "client has completed a job id: #{id}"
         @queue.complete(id)
     end
