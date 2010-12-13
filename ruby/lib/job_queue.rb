@@ -22,6 +22,16 @@ class JobQueue
             job.checkout!
             return job
         end
+        return nil
+    end
+
+    def complete(id)
+        id = id.to_i
+        @jobs.select { |i| i.id == id }.first.complete!
+    end
+
+    def length
+        return jobs.length
     end
 
     private

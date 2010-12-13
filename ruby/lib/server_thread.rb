@@ -1,38 +1,41 @@
 class ServerThread
-
-  def initialize(client, queue)
-    @client = client
-    @queue = queue
-  end
-
-  def serve_client
-    puts "Thread #{$$} serving client"
-    command = @client.read()
-    puts command
-    case command 
-    when Command::GET_JOB
-      get_job()
-    when Command::CHECKOUT_JOB
-      checkout_job()
-    when Command::COMPLETE_JOB
-      complete_job()
-    else
-      STDERR.puts "unkown command"
+    def initialize(client, queue)
+        @client = client
+        @queue = queue
     end
-    @client.close
-  end
 
-  def get_job
-    puts "client has requested a job"
-    @client.puts(@job_queue.next_job().to_yaml)
-  end
+    def serve_client
+        command = @client.recvmsg.first
+        case command 
+        when Command::GET_JOB
+            get_job()
+        when Command::CHECKOUT_JOB
+            checkout_job()
+        when Command::COMPLETE_JOB
+            complete_job()
+        when ""
+            # They closed the socket
+        else
+            STDERR.puts "unkown command: #{command.inspect}"
+        end
+        @client.close
+    end
+    alias :run :serve_client
 
-  def checkout_job
-    puts "client has checked out a job"
-  end
+    def get_job
+        puts "client has requested a job"
+        job = @queue.next_job()
+        @client.write(job.to_yaml)
+    end
 
-  def complete_job
-    puts "client has completed a job"
-  end
+    def checkout_job
+        puts "client has checked out a job"
+    end
+
+    def complete_job
+      id = @client.recvmsg.first
+        puts "client has completed a job id: #{id}"
+        @queue.complete(id)
+    end
 
 end

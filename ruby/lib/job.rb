@@ -14,10 +14,10 @@ class Job
     DESTINATION_INDEX = 9
 
     # Numbers are arbitrary
-    NEW = 0x42
-    CHECKED_OUT = 0x43
-    COMPLETE = 0x44
-    CANCELED = 0x45
+    NEW = "New"
+    CHECKED_OUT = "Checked_Out"
+    COMPLETE = "Complete"
+    CANCELED = "Canceled"
     def initialize(job_xml)
         @xml = case job_xml
                when String
@@ -50,6 +50,10 @@ class Job
 
     def complete?
       return @status == COMPLETE
+    end
+
+    def complete!
+      @status = Complete
     end
 
     private
