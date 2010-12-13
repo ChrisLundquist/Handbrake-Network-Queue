@@ -2,19 +2,19 @@ import org.w3c.dom.NodeList;
 
 
 public class Job {
-	// Arbitrary numbers for status
+    // Arbitrary numbers for status
     public static final String NEW = "New";
     public static final String CHECKED_OUT = "CheckedOut";
     public static final String COMPLETE = "Complete";
     public static final String CANCELED = "Canceled";
-    
+
     // TODO: Use the tag names instead of the indexes
     // These tags must match those used in the XML queue file
     public static final String ID_TAG = "Id";
     public static final String QUERY_TAG = "Query";
     public static final String SOURCE_TAG = "Source";
     public static final String DESTINATION_TAG = "Destination";
-    
+
     // The indexes in the document of the things that we care about
     public static final int ID_INDEX = 1;
     public static final int QUERY_INDEX = 3;
@@ -29,27 +29,27 @@ public class Job {
     private String destination;
 
     public Job(NodeList nodeList) throws NullPointerException {
-    	if(nodeList == null)
-    		throw new NullPointerException("Node was null when constructing Job");
-    	id = Integer.parseInt((nodeList.item(1).getTextContent()));
-    	query = nodeList.item(QUERY_INDEX).getTextContent();
-    	source = nodeList.item(SOURCE_INDEX).getTextContent();
-    	destination = nodeList.item(DESTINATION_INDEX).getTextContent();
+        if(nodeList == null)
+            throw new NullPointerException("Node was null when constructing Job");
+        id = Integer.parseInt((nodeList.item(1).getTextContent()));
+        query = nodeList.item(QUERY_INDEX).getTextContent();
+        source = nodeList.item(SOURCE_INDEX).getTextContent();
+        destination = nodeList.item(DESTINATION_INDEX).getTextContent();
 
-    	lastCheckedOut = 0;
-    	status = NEW;
-	}
-    
-    public String toString(){
-    	return "ID: " + id + "\n" +
-    			"Query: " + query +"\n" +
-    			"Source:" + source + "\n" +
-    			"Destination:" + destination + "\n" +
-    			"Status: " + status + "\n" +
-    			"Last Checkout: " + (getLastCheckOut() > 0 ? getLastCheckOut() + " seconds" : "N/A"); 
+        lastCheckedOut = 0;
+        status = NEW;
     }
 
-	// TODO error handling
+    public String toString(){
+        return "ID: " + id + "\n" +
+        "Query: " + query +"\n" +
+        "Source:" + source + "\n" +
+        "Destination:" + destination + "\n" +
+        "Status: " + status + "\n" +
+        "Last Checkout: " + (getLastCheckOut() > 0 ? getLastCheckOut() + " seconds" : "N/A"); 
+    }
+
+    // TODO error handling
     public boolean checkout(){
         // Don't checkout a job that we don't want to do
         // or has already been finished
@@ -83,12 +83,12 @@ public class Job {
     private int getTimeStamp(){
         return (int) (System.currentTimeMillis() / 1000);
     }
-    
+
     private int getLastCheckOut(){
-    	if(isCheckedOut())
-    		return (int)(System.currentTimeMillis() / 1000) - lastCheckedOut;
-    	else
-    		return 0;
+        if(isCheckedOut())
+            return (int)(System.currentTimeMillis() / 1000) - lastCheckedOut;
+        else
+            return 0;
     }
 
     public int getId(){
