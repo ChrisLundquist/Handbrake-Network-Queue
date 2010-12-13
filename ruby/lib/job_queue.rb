@@ -17,12 +17,13 @@ class JobQueue
     end
 
     def next_job
+        # look for a new job
         job = @jobs.select { |i| i.new? }.first
-        if job
-            job.checkout!
-            return job
-        end
-        return nil
+        
+        # TODO: look for a checked out job that hasn't been completed
+        # NOTE: We have to handle what happens when multiple people turn in the same job
+        #job ||= @jobs.select { |i| i.checked_out? }.sort_by { |i|  i.checked_out_at }.first
+        return job
     end
 
     def complete(id)

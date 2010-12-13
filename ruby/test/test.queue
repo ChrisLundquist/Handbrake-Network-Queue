@@ -11,7 +11,7 @@
     <Id>1</Id>
     <Query> -i "C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D1" -t 3 --angle 1 -c 1-5 -o "C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D1-3.m4v" -f mp4 --strict-anamorphic  -e x264 -q 20 -a 1 -E faac -6 dpl2 -R 48 -B 160 -D 0.0 --markers="C:\Users\Durandal\AppData\Local\Temp\STARGATE_ATLANTIS_S1_D1-3-3-chapters.csv" -x mixed-refs=0:8x8dct=1:trellis=2:me=tesa:b-pyramid=1:analyse=all:b-adapt=2:direct=auto:subq=9 -v 1</Query>
     <CustomQuery>false</CustomQuery>
-    <Source>C:\Users\Durandal\Desktop\DVD\FullDisc\STARGATE_ATLANTIS_S1_D1</Source>
+    <Source>C:\Users\Durandal\Desktup\DVD\FullDisc\STARGATE_ATLANTIS_S1_D1</Source>
     <Destination>C:\Users\Durandal\Desktop\Encode\STARGATE_ATLANTIS_S1_D1-3.m4v</Destination>
   </Job>
   <Job>

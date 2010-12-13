@@ -6,7 +6,8 @@ class Job
         :source,     # The location of the inpurt file on the server
         :destination,# The location of the desired destination on the server
         :status,     # The status of the job. New / Checked Out / Complete / Canceled etc.
-        :xml
+        :xml,
+        :checked_out_at
 
     ID_INDEX = 1
     QUERY_INDEX = 3
@@ -45,7 +46,12 @@ class Job
 
     def checkout!
       raise "Invalid checkout of complete job" if complete?
+      @checked_out_at = Time.now
       @status = CHECKED_OUT
+    end
+
+    def checked_out?
+      @status == CHECKED_OUT
     end
 
     def complete?

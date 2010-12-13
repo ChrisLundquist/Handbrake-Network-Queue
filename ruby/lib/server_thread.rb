@@ -25,7 +25,11 @@ class ServerThread
     def get_job
         puts "client has requested a job"
         job = @queue.next_job()
-        @client.write(job.to_yaml)
+        if job
+          @client.write(job.to_yaml)
+        else
+          @client.write(Command::NO_JOB)
+        end
     end
 
     def checkout_job
