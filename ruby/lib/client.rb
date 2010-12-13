@@ -22,7 +22,11 @@ class Client
     def run
         connect()
         get_job()
+        disconnect()
+        connect()
         do_job()
+        disconnect()
+        connect()
         complete_job()
         disconnect()
     end
@@ -39,21 +43,26 @@ class Client
     end
 
     def get_job()
-        puts "getting job withh command: #{Command::GET_JOB}"
-        @server.print(Command::GET_JOB)
+        puts "getting job with command: #{Command::GET_JOB}"
+        @server.write(Command::GET_JOB)
         f = File.new("test.job","w")
-        response = @server.read
-        job = YAML.load(response)
-        f.write(job.to_yaml)
+        response = @server.recvmsg.first
+        response.chomp!
+        @job = YAML.load(response)
+        f.write(@job.to_yaml)
         f.close
-        @server.close
     end
 
     def do_job()
+        puts "doing job"
         #TODO 
     end
 
+    # Write the command
+    # Then the Job ID
     def complete_job()
-        @server.print(Command::COMPLETE_JOB)
+        puts "completing job"
+        @server.write(Command::COMPLETE_JOB)
+        @server.write(@job.id)
     end
 end
