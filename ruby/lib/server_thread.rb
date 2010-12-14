@@ -41,7 +41,7 @@ class ServerThread
 
     def checkout_job
         id = read_id()
-        job = queue.checkout(id)
+        job = @queue.checkout(id)
         puts "client has checked out job id #{id}"
 
         files = job.files

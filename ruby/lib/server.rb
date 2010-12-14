@@ -38,6 +38,7 @@ class Server
                 rescue Exception => e
                     STDERR.puts "A server thread has encountered an exception:"
                     STDERR.puts "--------------------------------"
+                    STDERR.puts e.message
                     STDERR.puts e.backtrace
                     STDERR.puts "--------------------------------"
                 end

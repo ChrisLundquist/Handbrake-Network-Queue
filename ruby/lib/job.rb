@@ -52,6 +52,7 @@ class Job
         raise "Invalid checkout of complete job" if complete?
         @checked_out_at = Time.now
         @status = CHECKED_OUT
+        self
     end
 
     def checked_out?
@@ -63,8 +64,8 @@ class Job
     end
 
     def complete!
-      puts "job completed"
         @status = COMPLETE
+        self
     end
 
     private
