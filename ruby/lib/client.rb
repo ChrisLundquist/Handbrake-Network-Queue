@@ -4,7 +4,6 @@ require './lib/job' # Check out Job objects from the servr
 require './lib/command.rb'
 require 'yaml'
 
-HOST = "Mjolnir"
 PORT = 4444
 
 class Client
@@ -13,7 +12,7 @@ class Client
         :host,    # The hostname of the server we are connecting to
         :port     # the port on the server we are connecting to
 
-    def initialize(host = HOST, port = PORT)
+    def initialize(host, port = PORT)
         @host = host
         @port = port
     end
@@ -22,7 +21,6 @@ class Client
     def run
         while (get_job() ) do
             checkout_job()
-              checkout_job()
             do_job()
             complete_job()
         end
@@ -34,21 +32,22 @@ class Client
         @server.close
     end
 
-    def connect(host = HOST, port = PORT)
-        @server = TCPSocket.open(host,port)
-        raise "Unable to connect to #{host}:#{port}" unless @server
+    def connect()
+        @server = TCPSocket.open(@host, @port)
+        # This throws an exception on failure as desired/expected
     end
 
     def get_job()
         connect()
-        @server.write(Command::GET_JOB)
+        @server.puts(Command::GET_JOB)
         f = File.new("test.job","w")
-        response = @server.recvmsg.first
-        response.chomp!
-        if response == Command::NO_JOB
+        response = @server.gets
+        if response.chomp == Command::NO_JOB
+            STDERR.puts "No jobs on remote host available"
             disconnect()
             return false
         else
+            response += @server.read
             @job = YAML.load(response)
             f.write(@job.to_yaml)
             f.close
@@ -58,11 +57,17 @@ class Client
     end
 
     def checkout_job()
-      puts "Checking out job id #{@job.id}"
-      connect()
-      @server.write(Command::CHECKOUT_JOB)
-      @server.write(@job.id)
-      disconnect()
+        puts "Checking out job id #{@job.id}"
+        connect()
+        @server.puts(Command::CHECKOUT_JOB)
+        @server.puts(@job.id)
+
+        num_files = @server.gets.to_i
+        num_files.times do |file_number|
+            FileTransfer.recv(@server)
+        end
+
+        disconnect()
     end
 
     def do_job()
@@ -75,8 +80,8 @@ class Client
     def complete_job()
         puts "Completing job id #{@job.id}"
         connect()
-        @server.write(Command::COMPLETE_JOB)
-        @server.write(@job.id)
+        @server.puts(Command::COMPLETE_JOB)
+        @server.puts(@job.id)
         disconnect()
     end
 end

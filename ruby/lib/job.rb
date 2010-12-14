@@ -40,6 +40,10 @@ class Job
         @xml = nil
     end
 
+    def files
+       Dir["#{@source}/*/*"]
+    end
+
     def new?
         return @status == NEW
     end

@@ -1,3 +1,4 @@
+require "./lib/file_transfer"
 class ServerThread
     def initialize(client, queue)
         @client = client
@@ -5,7 +6,8 @@ class ServerThread
     end
 
     def serve_client
-        command = @client.recvmsg.first
+        command = @client.gets.chomp
+        puts command
         case command 
         when Command::GET_JOB
             get_job()
@@ -17,33 +19,46 @@ class ServerThread
             # They closed the socket
         else
             STDERR.puts "unknown command: #{command.inspect}"
-            @client.write(Command::UNKNOWN)
+            @client.puts(Command::UNKNOWN)
         end
+    ensure
         @client.close
     end
     alias :run :serve_client
 
+    private
     def get_job
         puts "client has requested a job"
         job = @queue.next_job()
         if job
             @client.write(job.to_yaml)
+            puts "Sent job ID #{job.id}"
         else
-            @client.write(Command::NO_JOB)
+            @client.puts(Command::NO_JOB)
             STDERR.puts "No new jobs left..."
         end
     end
 
     def checkout_job
-        id = @client.recvmsg.first
-        queue.checkout(id)
+        id = read_id()
+        job = queue.checkout(id)
         puts "client has checked out job id #{id}"
+
+        files = job.files
+        # Print the number of files that are being sent
+        @client.puts(files.length)
+        files.each do |file|
+            FileTransfer.send(@client,file)
+        end
     end
 
     def complete_job
-        id = @client.recvmsg.first
+        id = read_id()
         puts "client has completed a job id: #{id}"
         @queue.complete(id)
     end
 
+    def read_id
+        @client.gets
+    end
 end

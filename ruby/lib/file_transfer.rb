@@ -3,6 +3,7 @@ class FileTransfer
     def self.send(file, socket)
         # Make sure it is a file and not path
         file_path = File.open(file) if file.is_a?(String)
+        puts "Sending file...#{read_file_name(file)}"
 
         # Read the file name
         socket.puts(read_file_name(file))
@@ -31,6 +32,7 @@ class FileTransfer
     def self.recv(socket)
         # Read the file name
         file_name = socket.gets
+        puts "Receiving file...#{file_name}"
         # TODO Test we don't have a file by the same name
         file = File.open(file_name,"w")
 
