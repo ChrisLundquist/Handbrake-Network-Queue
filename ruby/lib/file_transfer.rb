@@ -1,8 +1,13 @@
 class FileTransfer
     #DEFAULT_PORT = 5555
-    def self.send(file, socket)
+    def self.send(socket,file_or_path)
         # Make sure it is a file and not path
-        file_path = File.open(file) if file.is_a?(String)
+        file =case file_or_path
+              when String
+                  file = File.open(file_or_path)
+              when File
+                  file_or_path
+              end
         puts "Sending file...#{read_file_name(file)}"
 
         # Read the file name
@@ -30,16 +35,16 @@ class FileTransfer
     end
 
     def self.recv(socket)
-        # Read the file name
-        file_name = socket.gets
+        # Read the file name VERY important to chomp it. Otherwise your filename has \n
+        file_name = socket.gets.chomp
         puts "Receiving file...#{file_name}"
         # TODO Test we don't have a file by the same name
         file = File.open(file_name,"w")
 
         # Read the size of the incomming file
-        size = socket.gets
+        size = socket.gets.to_i
 
-        block_size = socket.gets
+        block_size = socket.gets.to_i
 
         # Integer math intentional
         (size / block_size).times do
@@ -49,7 +54,7 @@ class FileTransfer
 
         # Read the rest of the file
         file.write(socket.read( size % block_size ))
-        
+
         # TODO close the connection????
         # If we are piggy backing this might be suprising for our users
     end

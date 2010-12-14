@@ -1,7 +1,8 @@
 
 require 'socket'    # So we can connect to the server
 require './lib/job' # Check out Job objects from the servr
-require './lib/command.rb'
+require './lib/command'
+require './lib/file_transfer'
 require 'yaml'
 
 PORT = 4444
