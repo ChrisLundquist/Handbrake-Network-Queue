@@ -76,7 +76,10 @@ class Client
 
     def do_job()
         puts "Doing job id #{@job.id}"
-        #TODO 
+        @job.prepare
+        # XXX Be less hacky
+        puts "HandBrakeCLI #{@job.query}"
+        `HandBrakeCLI #{@job.query}`
     end
 
     # Write the command

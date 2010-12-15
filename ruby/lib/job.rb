@@ -45,6 +45,13 @@ class Job
         @xml = nil
     end
 
+    def prepare
+        # The source directory will be relative to Dir.pwd on the client
+        @source = @source.split("/").last
+        @destination = @destination.split("/").last
+        detokenize_query()
+    end
+
     def files
         get_files(@source)
     end

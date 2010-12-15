@@ -1,7 +1,9 @@
 # vi: et sw=4
+require 'digest/md5'
 class FileTransfer
     DECLINE = "Decline"
     ACCEPT = "Accept"
+    CACHED = "Cached"
 
     def self.send(socket,file_or_path)
         # Make sure it is a file and not path
@@ -15,11 +17,20 @@ class FileTransfer
         # Read the file name
         file_name = read_file_name(file)
         socket.puts(file_name)
+        # Send the file hash to see if we can skip the file
+        socket.puts(Digest::MD5.file(file_name).hexdigest)
 
         # If they don't want the file we shouldn't send it
-        if socket.gets.chomp == DECLINE
+        response = socket.gets.chomp
+        case response
+        when DECLINE
             puts "Client declined file transfer of #{file_name}"
             return
+        when CACHED
+            puts "Client already has file #{file_name}"
+            return
+        else
+            # Do the rest of the code below
         end
 
         puts "Sending file...#{file_name}"
@@ -45,9 +56,16 @@ class FileTransfer
     def self.recv(socket)
         # Read the file name VERY important to chomp it. Otherwise your filename has \n
         file_name = socket.gets.chomp
+        file_hash = socket.gets.chomp
 
         # Test we don't have a file by the same name
         if File::exists?(file_name)
+            if( Digest::MD5.file(file_name).hexdigest == file_hash)
+                puts "Already have file #{file_name} cached"
+                socket.puts(CACHED)
+                return
+                # We already have this file
+            end
             puts "Overwrite '#{file_name}'?(y/n)" 
             if ["n","N","no","No","NO"].include?(gets.chomp)
                 # We like ours better

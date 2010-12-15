@@ -46,7 +46,6 @@ class ServerThread
         puts "client has checked out job id #{id}"
 
         # Send them the directory structure
-        puts job.relative_dirs_with_source_dir.inspect
         FileTransfer.send_dirs(@client, job.relative_dirs_with_source_dir)
 
         # Get the files required
