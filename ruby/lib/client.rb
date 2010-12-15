@@ -41,7 +41,7 @@ class Client
     def get_job()
         connect()
         @server.puts(Command::GET_JOB)
-        f = File.new("test.job","w")
+        f = File.new("current.job","w")
         response = @server.gets
         if response.chomp == Command::NO_JOB
             STDERR.puts "No jobs on remote host available"
@@ -62,6 +62,9 @@ class Client
         connect()
         @server.puts(Command::CHECKOUT_JOB)
         @server.puts(@job.id)
+
+
+        FileTransfer.make_dirs(@server)
 
         num_files = @server.gets.to_i
         num_files.times do |file_number|

@@ -5,12 +5,12 @@ class FileTransfer
 
     def self.send(socket,file_or_path)
         # Make sure it is a file and not path
-        file =case file_or_path
-              when String
-                  file = File.open(file_or_path,"rb:binary")
-              when File
-                  file_or_path
-              end
+        file = case file_or_path
+               when String
+                   file = File.open(file_or_path,"rb:binary")
+               when File
+                   file_or_path
+               end
 
         # Read the file name
         file_name = read_file_name(file)
@@ -45,11 +45,10 @@ class FileTransfer
     def self.recv(socket)
         # Read the file name VERY important to chomp it. Otherwise your filename has \n
         file_name = socket.gets.chomp
-        puts "Receiving file...#{file_name}"
 
         # Test we don't have a file by the same name
         if File::exists?(file_name)
-            puts "Overwrite file by same name?(y/n)" 
+            puts "Overwrite '#{file_name}'?(y/n)" 
             if ["n","N","no","No","NO"].include?(gets.chomp)
                 # We like ours better
                 socket.puts(DECLINE)
@@ -58,6 +57,7 @@ class FileTransfer
         end
         # We accept the file.
         socket.puts(ACCEPT)
+        puts "Receiving file...#{file_name}"
         file = File.open(file_name,"wb:binary")
 
         # Read the size of the incomming file
@@ -83,9 +83,35 @@ class FileTransfer
         end
     end
 
+    # Sends the directory structure
+    def self.send_dirs(socket,dirs)
+        # Tell them how many
+        socket.puts(dirs.length)
+        dirs.each do |dir|
+            socket.puts(dir)
+        end
+    end
+
+    # Makes the directory structure
+    def self.make_dirs(socket)
+        # See how many we are going to do
+        num_dirs = socket.gets.to_i
+
+        num_dirs.times do |dir_num|
+            # Read the dir name
+            dir_name = socket.gets.chomp
+            puts "Making dir #{dir_name}"
+            if Dir.exists?(dir_name)
+                # nothing to do
+            else
+                Dir.mkdir(dir_name)
+            end
+        end
+    end
+
     private
     def self.read_file_name(file)
-        file.path.split("/").last
+        file.path
     end
 
     def self.read_file_size(file)

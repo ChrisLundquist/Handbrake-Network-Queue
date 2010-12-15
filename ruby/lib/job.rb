@@ -21,7 +21,7 @@ class Job
     CANCELED = "Canceled"
 
     SOURCE_TOKEN = "__SOURCE__"
-    DESTINATION_TOKEN = "__DESTINATION"
+    DESTINATION_TOKEN = "__DESTINATION__"
 
     def initialize(job_xml)
         @xml = case job_xml
@@ -46,7 +46,57 @@ class Job
     end
 
     def files
-        Dir["#{@source}/*/*"]
+        get_files(@source)
+    end
+
+    def relative_files
+        # Save where we are
+        pwd = Dir.pwd
+        # Go where we need to be
+        Dir.chdir(@source)
+        # Find the files below this
+        files = get_files(".")
+        # Go back to where we were
+        Dir.chdir(pwd)
+        # Return our files relative to @souce
+        files
+    end
+
+    def relative_files_with_source_dir
+        folder = @source.split("/").last + "/"
+        relative_files.map do |file|
+            folder + file.sub("./","")
+        end
+    end
+
+    def dirs
+        # if the paths are in ascending order you can't try to make /foo/bar before /foo/
+        get_dirs(@source).sort_by{ |i| i.length }
+    end
+
+    def relative_dirs
+        # Save where we are
+        pwd = Dir.pwd
+        # Go where we need to be
+        Dir.chdir(@source)
+        # Find the dirs below this
+        dirs = get_dirs(".")
+        # Go back to where we were
+        Dir.chdir(pwd)
+        # Return our dirs relative to @souce
+        # if the paths are in ascending order you can't try to make /foo/bar before /foo/
+        dirs.sort_by{ |i| i.length }
+    end
+
+    def relative_dirs_with_source_dir
+        folder = @source.split("/").last + "/"
+        dirs = relative_dirs.map do |dir|
+            folder + dir.sub("./","")
+        end
+        # Add the source dir
+        dirs.push(folder)
+        # if the paths are in ascending order you can't try to make /foo/bar before /foo/
+        dirs.sort_by{ |i| i.length }
     end
 
     def new?
@@ -90,17 +140,46 @@ class Job
         @xml[DESTINATION_INDEX].text.to_s
     end
 
+    # Recursively gets all the dir paths from a root
+    def get_dirs(dir_path)
+        dirs = Array.new
+        Dir[dir_path + "/*"].each do |i|
+            if Dir.exists?(i)
+                dirs.push(i) if File.directory?(i)
+                # Recursive
+                dirs.push(get_dirs(i)) 
+            end
+        end
+        dirs.flatten!
+        dirs.compact!
+        dirs
+    end
+
+    def get_files(dir_path)
+        files = Array.new
+        # For all the directories below me
+        get_dirs(dir_path).each do |dir|
+            # Grab all the files
+            Dir[dir + "/*"].each do |i|
+                if File.exists?(i)
+                    files.push(i) unless File.directory?(i)
+                end
+            end
+        end
+        files
+    end
+
     # We tokenize this because the paths on the remote host
     # are going to be different
     def tokenize_query
-        @query.replace(@source,SOURCE_TOKEN)
-        @query.replace(@destination,DESTINATION_TOKEN)
+        @query.gsub(@source,SOURCE_TOKEN)
+        @query.gsub(@destination,DESTINATION_TOKEN)
     end
 
     # Inverse transform. Hopefully @source and @destination
     # will have been replaced for the local machine
     def detokenize_query
-        @query.replace(SOURCE_TOKEN,@source)
-        @query.replace(DESTINATION_TOKEN,@destination)
+        @query.gsub(SOURCE_TOKEN,@source)
+        @query.gsub(DESTINATION_TOKEN,@destination)
     end
 end
