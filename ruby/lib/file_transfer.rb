@@ -1,17 +1,27 @@
 class FileTransfer
-    #DEFAULT_PORT = 5555
+    DECLINE = "Decline"
+    ACCEPT = "Accept"
+
     def self.send(socket,file_or_path)
         # Make sure it is a file and not path
         file =case file_or_path
               when String
-                  file = File.open(file_or_path)
+                  file = File.open(file_or_path,"rb:binary")
               when File
                   file_or_path
               end
-        puts "Sending file...#{read_file_name(file)}"
 
         # Read the file name
-        socket.puts(read_file_name(file))
+        file_name = read_file_name(file)
+        socket.puts(file_name)
+
+        # If they don't want the file we shouldn't send it
+        if socket.gets.chomp == DECLINE
+            puts "Client declined file transfer of #{file_name}"
+            return
+        end
+
+        puts "Sending file...#{file_name}"
 
         # Send the size of the file
         size = read_file_size(file)
@@ -29,34 +39,47 @@ class FileTransfer
 
         # Send the rest of the file
         socket.write(file.read(size % block_size))
-
-        # TODO close the connection????
-        # If we are piggy backing this might be suprising for our users
     end
 
     def self.recv(socket)
         # Read the file name VERY important to chomp it. Otherwise your filename has \n
         file_name = socket.gets.chomp
         puts "Receiving file...#{file_name}"
-        # TODO Test we don't have a file by the same name
-        file = File.open(file_name,"w")
+
+        # Test we don't have a file by the same name
+        if File::exists?(file_name)
+            puts "Overwrite file by same name?(y/n)" 
+            if ["n","N","no","No","NO"].include?(gets.chomp)
+                # We like ours better
+                socket.puts(DECLINE)
+                return
+            end
+        end
+        # We accept the file.
+        socket.puts(ACCEPT)
+        file = File.open(file_name,"wb:binary")
 
         # Read the size of the incomming file
         size = socket.gets.to_i
 
         block_size = socket.gets.to_i
+        buffer = nil
+        begin
+            # Integer math intentional
+            (size / block_size).times do
+                # Read a block at a time
+                buffer = socket.read(block_size)
+                file.write(buffer)
+            end
 
-        # Integer math intentional
-        (size / block_size).times do
-            # Read a block at a time
-            file.write(socket.read(block_size))
+            # Read the rest of the file
+            file.write(socket.read( size % block_size ))
+        rescue Exception => e
+            STDERR.puts e.message
+            STDERR.puts e.backtrace
+            STDERR.puts buffer.inspect
+            socket.close
         end
-
-        # Read the rest of the file
-        file.write(socket.read( size % block_size ))
-
-        # TODO close the connection????
-        # If we are piggy backing this might be suprising for our users
     end
 
     private
@@ -65,7 +88,7 @@ class FileTransfer
     end
 
     def self.read_file_size(file)
-        file.size
+        file.stat.size
     end
 
     def self.read_file_block_size(file)
