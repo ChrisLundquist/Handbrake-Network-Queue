@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# vi: et sw=4
 
 require 'socket'  # TCPServer
 require 'yaml'    # YAML

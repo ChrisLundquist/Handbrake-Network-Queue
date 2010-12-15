@@ -1,3 +1,4 @@
+# vi: et sw=4
 class FileTransfer
     DECLINE = "Decline"
     ACCEPT = "Accept"

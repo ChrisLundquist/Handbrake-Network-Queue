@@ -1,0 +1,6 @@
+IMPORTANT: There is a known bug in ruby 1.9.2p0 (2010-08-18 revision 29036) [x86_64-linux]
+with the Socket code used in this application. Either of the following are known to work
+
+ruby 1.8.7 (2010-06-23 patchlevel 299) [x86_64-linux]
+ruby 1.9.2p94 (2010-12-08 revision 30140) [x86_64-linux]
+

@@ -1,3 +1,4 @@
+# vi: et sw=4
 require 'rexml/document'
 # Represents a job from/on the Queue
 class Job
@@ -14,11 +15,14 @@ class Job
     SOURCE_INDEX = 7
     DESTINATION_INDEX = 9
 
-    # Numbers are arbitrary
     NEW = "New"
     CHECKED_OUT = "Checked_Out"
     COMPLETE = "Complete"
     CANCELED = "Canceled"
+
+    SOURCE_TOKEN = "__SOURCE__"
+    DESTINATION_TOKEN = "__DESTINATION"
+
     def initialize(job_xml)
         @xml = case job_xml
                when String
@@ -33,6 +37,7 @@ class Job
         @query = get_query_from_xml()
         @source = get_source_from_xml()
         @destination = get_destination_from_xml()
+        tokenize_query()
 
         # We have to nuke the XML because it screws up serialization when
         # we try to send it to the client. because its REXML::Element nested
@@ -41,7 +46,7 @@ class Job
     end
 
     def files
-       Dir["#{@source}/*/*"]
+        Dir["#{@source}/*/*"]
     end
 
     def new?
@@ -83,5 +88,19 @@ class Job
 
     def get_destination_from_xml
         @xml[DESTINATION_INDEX].text.to_s
+    end
+
+    # We tokenize this because the paths on the remote host
+    # are going to be different
+    def tokenize_query
+        @query.replace(@source,SOURCE_TOKEN)
+        @query.replace(@destination,DESTINATION_TOKEN)
+    end
+
+    # Inverse transform. Hopefully @source and @destination
+    # will have been replaced for the local machine
+    def detokenize_query
+        @query.replace(SOURCE_TOKEN,@source)
+        @query.replace(DESTINATION_TOKEN,@destination)
     end
 end

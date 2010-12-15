@@ -1,3 +1,4 @@
+# vi: et sw=4
 require "./lib/file_transfer"
 class ServerThread
     def initialize(client, queue)

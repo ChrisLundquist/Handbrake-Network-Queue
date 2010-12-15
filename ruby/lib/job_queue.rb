@@ -1,3 +1,4 @@
+# vi: et sw=4
 require 'rexml/document'
 require './lib/job'
 class JobQueue
@@ -19,7 +20,7 @@ class JobQueue
     def next_job
         # look for a new job
         job = @jobs.select { |i| i.new? }.first
-        
+
         # TODO: look for a checked out job that hasn't been completed
         # NOTE: We have to handle what happens when multiple people turn in the same job
         #job ||= @jobs.select { |i| i.checked_out? }.sort_by { |i|  i.checked_out_at }.first
@@ -27,11 +28,11 @@ class JobQueue
     end
 
     def checkout(id)
-      find_job_by_id(id).checkout!
+        find_job_by_id(id).checkout!
     end
 
     def complete(id)
-      find_job_by_id(id).complete!
+        find_job_by_id(id).complete!
     end
 
     def length
@@ -41,11 +42,11 @@ class JobQueue
     private
 
     def find_job_by_id(id)
-      id = id.to_i
-      job = @jobs.select { |i| i.id == id }.first
-      return job if job
-      STDERR.puts("Unable to locate job with id #{id}. have the following jobs")
-      @jobs.each do |i| puts i.inspect end
+        id = id.to_i
+        job = @jobs.select { |i| i.id == id }.first
+        return job if job
+        STDERR.puts("Unable to locate job with id #{id}. have the following jobs")
+        @jobs.each do |i| puts i.inspect end
     end
 
     def parse_queue_file
