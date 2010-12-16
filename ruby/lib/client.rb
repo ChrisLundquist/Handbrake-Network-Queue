@@ -41,15 +41,15 @@ class Client
     def get_job()
         connect()
         @server.puts(Command::GET_JOB)
-        f = File.new("current.job","w")
-        response = @server.gets
-        if response.chomp == Command::NO_JOB
+        response = @server.gets.chomp
+        if response == Command::NO_JOB
             STDERR.puts "No jobs on remote host available"
             disconnect()
             return false
         else
-            response += @server.read
-            @job = YAML.load(response)
+            @job = Job.recv(@server)
+            # For to real reason we print this to a file
+            f = File.new("current.job","w")
             f.write(@job.to_yaml)
             f.close
             disconnect()
@@ -63,13 +63,10 @@ class Client
         @server.puts(Command::CHECKOUT_JOB)
         @server.puts(@job.id)
 
-
+        # Make the relative directories for the files
         FileTransfer.make_dirs(@server)
-
-        num_files = @server.gets.to_i
-        num_files.times do |file_number|
-            FileTransfer.recv(@server)
-        end
+        # Get the files which should be in the relative directory we just made
+        FileTransfer.recv(@server)
 
         disconnect()
     end
@@ -90,7 +87,7 @@ class Client
         @server.puts(Command::COMPLETE_JOB)
         @server.puts(@job.id)
         # Send the encoded file
-        FileTransfer.send(@job.destination)
+        FileTransfer.send(@server,@job.destination)
         disconnect()
     end
 end

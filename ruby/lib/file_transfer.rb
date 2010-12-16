@@ -5,99 +5,115 @@ class FileTransfer
     ACCEPT = "Accept"
     CACHED = "Cached"
 
-    def self.send(socket,file_or_path)
-        # Make sure it is a file and not path
-        file = case file_or_path
-               when String
-                   file = File.open(file_or_path,"rb:binary")
-               when File
-                   file_or_path
-               end
+    def self.send(socket,files_or_paths)
 
-        # Read the file name
-        file_name = read_file_name(file)
-        socket.puts(file_name)
-        # Send the file hash to see if we can skip the file
-        socket.puts(Digest::MD5.file(file_name).hexdigest)
+        # Say how many things we are going to send
+        puts "Sending #{files_or_paths.length} files..."
+        socket.puts files_or_paths.length
 
-        # If they don't want the file we shouldn't send it
-        response = socket.gets.chomp
-        case response
-        when DECLINE
-            puts "Client declined file transfer of #{file_name}"
-            return
-        when CACHED
-            puts "Client already has file #{file_name}"
-            return
-        else
-            # Do the rest of the code below
+        files_or_paths.each do |file_or_path|
+            # Make sure it is a file and not path
+            file = case file_or_path
+                   when String
+                       file = File.open(file_or_path,"rb:binary")
+                   when File
+                       file_or_path
+                   end
+
+            # Read the file name
+            file_name = read_file_name(file)
+            socket.puts(file_name)
+            # Send the file hash to see if we can skip the file
+            socket.puts(Digest::MD5.file(file_name).hexdigest)
+
+            # If they don't want the file we shouldn't send it
+            response = socket.gets.chomp
+            case response
+            when DECLINE
+                puts "Client declined file transfer of #{file_name}"
+                next
+            when CACHED
+                puts "Client already has file #{file_name}"
+                next
+            else
+                # Do the rest of the code below
+            end
+
+            puts "Sending file...#{file_name}"
+
+            # Send the size of the file
+            size = read_file_size(file)
+            socket.puts(size)
+
+            # Send the block size we are going to use
+            block_size = read_file_block_size(file)
+            socket.puts(block_size)
+
+            # Integer math intentional
+            (size / block_size).times do
+                # Send the file a block at a time
+                socket.write(file.read(block_size))
+            end
+
+            # Send the rest of the file
+            socket.write(file.read(size % block_size))
+            file.close
         end
-
-        puts "Sending file...#{file_name}"
-
-        # Send the size of the file
-        size = read_file_size(file)
-        socket.puts(size)
-
-        # Send the block size we are going to use
-        block_size = read_file_block_size(file)
-        socket.puts(block_size)
-
-        # Integer math intentional
-        (size / block_size).times do
-            # Send the file a block at a time
-            socket.write(file.read(block_size))
-        end
-
-        # Send the rest of the file
-        socket.write(file.read(size % block_size))
     end
 
     def self.recv(socket)
-        # Read the file name VERY important to chomp it. Otherwise your filename has \n
-        file_name = socket.gets.chomp
-        file_hash = socket.gets.chomp
+        # See how many things we are going to be sent
+        num_files = socket.gets.chomp.to_i
+        puts "Receiving #{num_files} files"
 
-        # Test we don't have a file by the same name
-        if File::exists?(file_name)
-            if( Digest::MD5.file(file_name).hexdigest == file_hash)
-                puts "Already have file #{file_name} cached"
-                socket.puts(CACHED)
-                return
-                # We already have this file
+        num_files.times do |time|
+            # Read the file name VERY important to chomp it. Otherwise your filename has \n
+            file_name = socket.gets.chomp
+            file_hash = socket.gets.chomp
+
+            # Test we don't have a file by the same name
+            if File::exists?(file_name)
+                if( Digest::MD5.file(file_name).hexdigest == file_hash)
+                    puts "Already have file #{file_name} cached"
+                    socket.puts(CACHED)
+                    next
+                    # We already have this file
+                end
+                puts "Overwrite '#{file_name}'?(y/n)" 
+                if ["n","N","no","No","NO"].include?(gets.chomp)
+                    # We like ours better
+                    socket.puts(DECLINE)
+                    next
+                end
             end
-            puts "Overwrite '#{file_name}'?(y/n)" 
-            if ["n","N","no","No","NO"].include?(gets.chomp)
-                # We like ours better
-                socket.puts(DECLINE)
-                return
+            # We accept the file.
+            socket.puts(ACCEPT)
+            puts "Receiving file...#{file_name}"
+            file = File.open(file_name,"wb:binary")
+
+            # Read the size of the incomming file
+            size = socket.gets.to_i
+
+            block_size = socket.gets.to_i
+            buffer = nil
+            begin
+                # Integer math intentional
+                (size / block_size).times do
+                    # Read a block at a time
+                    buffer = socket.read(block_size)
+                    file.write(buffer)
+                end
+
+                # Read the rest of the file
+                file.write(socket.read( size % block_size ))
+                file.close
+            rescue Exception => e
+                STDERR.puts e.message
+                STDERR.puts e.backtrace
+                STDERR.puts buffer.inspect
+                socket.close
+                file.close
             end
-        end
-        # We accept the file.
-        socket.puts(ACCEPT)
-        puts "Receiving file...#{file_name}"
-        file = File.open(file_name,"wb:binary")
-
-        # Read the size of the incomming file
-        size = socket.gets.to_i
-
-        block_size = socket.gets.to_i
-        buffer = nil
-        begin
-            # Integer math intentional
-            (size / block_size).times do
-                # Read a block at a time
-                buffer = socket.read(block_size)
-                file.write(buffer)
-            end
-
-            # Read the rest of the file
-            file.write(socket.read( size % block_size ))
-        rescue Exception => e
-            STDERR.puts e.message
-            STDERR.puts e.backtrace
-            STDERR.puts buffer.inspect
-            socket.close
         end
     end
 
