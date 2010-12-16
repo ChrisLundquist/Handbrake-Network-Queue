@@ -32,7 +32,8 @@ class ServerThread
         puts "client has requested a job"
         job = @queue.next_job()
         if job
-            @client.write(job.to_yaml)
+            @client.puts(Command::HAVE_JOB)
+            Job.send(@client,job)
             puts "Sent job ID #{job.id}"
         else
             @client.puts(Command::NO_JOB)

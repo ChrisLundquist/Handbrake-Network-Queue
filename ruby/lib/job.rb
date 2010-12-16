@@ -23,7 +23,44 @@ class Job
     SOURCE_TOKEN = "__SOURCE__"
     DESTINATION_TOKEN = "__DESTINATION__"
 
-    def initialize(job_xml)
+    def self.send(socket,job)
+        # ID
+        socket.puts job.id
+        # Query
+        socket.puts job.query
+        # Source
+        socket.puts job.source
+        # Dest
+        socket.puts job.destination
+    end
+
+    def self.recv(socket)
+        # ID
+        id = socket.gets.chomp
+        # Query
+        query = socket.gets.chomp
+        # Source
+        source = socket.gets.chomp
+        # Dest
+        dest = socket.gets.chomp
+        job = Job.new
+
+        # HACK FIXME get rid of instance_eval
+        #NOTE Inspect puts "" around our stuff since they are string class.
+        #     otherwise its a bunch of nonsensical literals.
+        job.instance_eval(" 
+        @id = #{id}
+        @query = #{query.inspect}
+        @source = #{source.inspect}
+        @destination = #{dest.inspect}" 
+                         )
+        job
+    end
+
+    def initialize(job_xml = nil)
+        # Return a bare object if they don't get us anything
+        return unless job_xml
+
         @xml = case job_xml
                when String
                    REXML::Document.new(job_xml)

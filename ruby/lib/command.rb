@@ -5,5 +5,6 @@ class Command
     CHECKOUT_JOB = "Checkout_Job"
     COMPLETE_JOB = "Complete_Job"
     NO_JOB = "No_Job"
+    HAVE_JOB = "Have_Job"
     UNKNOWN = "Unkown_command"
 end
