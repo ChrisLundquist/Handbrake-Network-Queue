@@ -49,20 +49,13 @@ class ServerThread
         # Send them the directory structure
         FileTransfer.send_dirs(@client, job.relative_dirs_with_source_dir)
 
-        # Get the files required
-        files = job.relative_files_with_source_dir
-
         # Save where we are
         pwd = Dir.pwd
         # Go to the source folder so we can send relative paths
         Dir.chdir(job.source + "/..")
 
-        # TODO Move the looping part into FileTransfer
-        # Print the number of files that are being sent
-        @client.puts(files.length)
-        files.each do |file|
-            FileTransfer.send(@client,file)
-        end
+        # Get the files required
+        FileTransfer.send(@client,job.relative_files_with_source_dir)
 
         # Go back to where we were
         Dir.chdir(pwd)

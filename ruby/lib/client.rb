@@ -63,13 +63,10 @@ class Client
         @server.puts(Command::CHECKOUT_JOB)
         @server.puts(@job.id)
 
-
+        # Make the relative directories for the files
         FileTransfer.make_dirs(@server)
-
-        num_files = @server.gets.to_i
-        num_files.times do |file_number|
-            FileTransfer.recv(@server)
-        end
+        # Get the files which should be in the relative directory we just made
+        FileTransfer.recv(@server)
 
         disconnect()
     end
