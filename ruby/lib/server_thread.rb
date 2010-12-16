@@ -70,6 +70,7 @@ class ServerThread
     def complete_job
         id = read_id()
         puts "client has completed a job id: #{id}"
+        FileTransfer.recv(@client)
         @queue.complete(id)
     end
 

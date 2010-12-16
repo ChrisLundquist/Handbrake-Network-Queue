@@ -89,6 +89,8 @@ class Client
         connect()
         @server.puts(Command::COMPLETE_JOB)
         @server.puts(@job.id)
+        # Send the encoded file
+        FileTransfer.send(@job.destination)
         disconnect()
     end
 end

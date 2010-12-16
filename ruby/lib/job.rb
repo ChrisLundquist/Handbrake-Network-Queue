@@ -179,14 +179,14 @@ class Job
     # We tokenize this because the paths on the remote host
     # are going to be different
     def tokenize_query
-        @query.gsub(@source,SOURCE_TOKEN)
-        @query.gsub(@destination,DESTINATION_TOKEN)
+        @query.sub!(@source,SOURCE_TOKEN)
+        @query.sub!(@destination,DESTINATION_TOKEN)
     end
 
     # Inverse transform. Hopefully @source and @destination
     # will have been replaced for the local machine
     def detokenize_query
-        @query.gsub(SOURCE_TOKEN,@source)
-        @query.gsub(DESTINATION_TOKEN,@destination)
+        @query.sub!(SOURCE_TOKEN,@source)
+        @query.sub!(DESTINATION_TOKEN,@destination)
     end
 end
