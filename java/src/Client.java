@@ -22,21 +22,21 @@ public class Client {
     }
 
     public void start(){
-        connect();
-        do{
-            getJob();
+        while(getJob()){
             checkoutJob();
             doJob();
             completeJob();
-        }while(getJob());
-        disconnect();
+        }
     }
 
     private void completeJob() {
+        connect();
         out.println(Command.COMPLETE_JOB);
-        //TODO send the id of our job
+        // Send the id of our job
+        out.println(job.getId());
 
         //TODO send the completed job back over
+        disconnect();
     }
 
     private void doJob() {
@@ -44,24 +44,31 @@ public class Client {
     }
 
     private void checkoutJob() {
+        connect();
         out.println(Command.CHECKOUT_JOB);
-        // TODO send the id of our job
+        // Send the id of our job
+        out.println(job.getId());
 
         //TODO copy the files
+        disconnect();
     }
 
     private boolean getJob(){
+        connect();
         out.println(Command.GET_JOB);
         try {
             String jobsAvailable = in.readLine();
-            if(jobsAvailable.equals(Command.NO_JOB)){
+            if(jobsAvailable == null || jobsAvailable.equals(Command.NO_JOB)){
                 System.out.println("Server has no jobs available");
                 return false;
+            } else {
+                job = Job.recv(in);
+                System.out.println("Got Job ID " + job.getId());
             }
-            //TODO get the job Object
         } catch (IOException e) {
             System.err.println("Error: IOError when retrieving job.");
         }
+        disconnect();
         return true;
     }
 
@@ -77,17 +84,17 @@ public class Client {
             System.err.println("Couldn't get I/O for the connection to: " + remote_host);
             System.exit(1);
         }
-        System.out.println("Connected to server");
+        System.out.println("Connected to " + remote_host);
     }
 
     private void disconnect(){
-        System.out.println("Closing connection to server");
+        System.out.println("Closing connection to " + remote_host);
         try {
             server.close();
             out.close();
             in.close();
         } catch (IOException e) {
-            System.err.println("Error when closing connection to server.");
+            System.err.println("Error when closing connection to " + remote_host);
         }
     }
 
