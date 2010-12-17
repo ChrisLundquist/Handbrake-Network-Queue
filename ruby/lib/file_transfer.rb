@@ -158,6 +158,7 @@ class FileTransfer
         # Try to find the native size
         size = file.stat.blksize
         # Otherwise use 4Kb
-        size = 4096 if size == 0
+        size = 4096 if size.to_i == 0
+        size
     end
 end
