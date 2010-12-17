@@ -4,3 +4,9 @@ with the Socket code used in this application. Either of the following are known
 ruby 1.8.7 (2010-06-23 patchlevel 299) [x86_64-linux]
 ruby 1.9.2p94 (2010-12-08 revision 30140) [x86_64-linux]
 
+== Windows ==
+Ruby 1.9.1
+I have experienced extremely slow TCPSocket.write speeds when running the server
+on Windows 7 ( others untested but suspected to be the same ). I am currently
+investigating this issue but believe it to be in the implementation interface
+between Ruby, C and the Windows API. A problem I am ill equipped to deal with.
