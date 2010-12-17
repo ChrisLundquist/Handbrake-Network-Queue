@@ -2,7 +2,6 @@
 # vi: et sw=4
 
 require 'socket'  # TCPServer
-require 'yaml'    # YAML
 require './lib/job'      # Job
 require './lib/job_queue' # The control structure for the jobs.
 require './lib/command'
@@ -61,5 +60,6 @@ class Server
     def parse_queue_file
         @job_queue = JobQueue.new(@queue_file)
         puts "#{@job_queue.length} jobs found"
+        @queue_file.close
     end
 end
