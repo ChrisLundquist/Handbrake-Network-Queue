@@ -4,6 +4,7 @@ class FileTransfer
     DECLINE = "Decline"
     ACCEPT = "Accept"
     CACHED = "Cached"
+    EXISTS = "Exists"
 
     def self.send(socket,files_or_paths)
         # If they don't give us an array make it an array
@@ -25,20 +26,28 @@ class FileTransfer
             # Read the file name
             file_name = read_file_name(file)
             socket.puts(file_name)
-            # Send the file hash to see if we can skip the file
-            socket.puts(Digest::MD5.file(file_name).hexdigest)
 
             # If they don't want the file we shouldn't send it
             response = socket.gets.chomp
             case response
-            when DECLINE
-                puts "Client declined file transfer of #{file_name}"
-                next
-            when CACHED
-                puts "Client already has file #{file_name}"
-                next
+            when EXISTS
+                puts "Remote host already has file by name #{file_name}"
+                # Send the file hash to see if we can skip the file
+                socket.puts(Digest::MD5.file(file_name).hexdigest)
+                response = socket.gets.chomp
+                case response
+                when DECLINE
+                    puts "Remote host declined file transfer of #{file_name}"
+                    next
+                when CACHED
+                    puts "Remote Host already has file #{file_name} cached"
+                    next
+                else
+                end
+            when ACCEPT
+                # Do the below
             else
-                # Do the rest of the code below
+                STDERR.puts "Unhandled signal in file transfer #{response}"
             end
 
             puts "Sending file...#{file_name}"
@@ -63,7 +72,7 @@ class FileTransfer
         end
     end
 
-    def self.recv(socket)
+    def self.recv(socket, interactive = false)
         # See how many things we are going to be sent
         num_files = socket.gets.chomp.to_i
         puts "Receiving #{num_files} files"
@@ -71,21 +80,28 @@ class FileTransfer
         num_files.times do |time|
             # Read the file name VERY important to chomp it. Otherwise your filename has \n
             file_name = socket.gets.chomp
-            file_hash = socket.gets.chomp
 
             # Test we don't have a file by the same name
             if File::exists?(file_name)
+                # Tell the server we have a file by that name
+                socket.puts(EXISTS)
+                # Read their file's checksum
+                file_hash = socket.gets.chomp
+
+                # If our file has the same name and checksum assume its the same and skip it
                 if( Digest::MD5.file(file_name).hexdigest == file_hash)
                     puts "Already have file #{file_name} cached"
                     socket.puts(CACHED)
                     next
                     # We already have this file
                 end
-                puts "Overwrite '#{file_name}'?(y/n)" 
-                if ["n","N","no","No","NO"].include?(gets.chomp)
-                    # We like ours better
-                    socket.puts(DECLINE)
-                    next
+                if(interactive)
+                    puts "Overwrite '#{file_name}'?(y/n)" 
+                    if ["n","N","no","No","NO"].include?(gets.chomp)
+                        # We like ours better
+                        socket.puts(DECLINE)
+                        next
+                    end
                 end
             end
             # We accept the file.
