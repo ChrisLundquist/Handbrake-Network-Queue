@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import org.w3c.dom.NodeList;
 
 
@@ -27,17 +31,47 @@ public class Job {
     private String query;
     private String source;
     private String destination;
+    
+    //
+    public static void send(PrintWriter out, Job job ){
+        out.println(job.id);
+        out.println(job.query);
+        out.println(job.source);
+        out.println(job.destination);
+    }
+    
+    public static Job recv(BufferedReader in){
+        Job job = new Job();
+        
+        try {
+            job.id = Integer.parseInt(in.readLine());
+            job.query = in.readLine();
+            job.source = in.readLine();
+            job.destination = in.readLine();
+        } catch (NumberFormatException e) {
+            System.err.println("Unable to parse ID to int");
+            System.exit(-2);
+        } catch (IOException e) {
+            System.err.println("Socket read error when receiving Job");
+            System.exit(-3);
+        }
+        
+        return job;
+    }
+    
 
+    public Job(){
+        lastCheckedOut = 0;
+        status = NEW;
+    }
+    
     public Job(NodeList nodeList) throws NullPointerException {
-        if(nodeList == null)
-            throw new NullPointerException("Node was null when constructing Job");
+        this(); // Set our defaults
+
         id = Integer.parseInt((nodeList.item(1).getTextContent()));
         query = nodeList.item(QUERY_INDEX).getTextContent();
         source = nodeList.item(SOURCE_INDEX).getTextContent();
         destination = nodeList.item(DESTINATION_INDEX).getTextContent();
-
-        lastCheckedOut = 0;
-        status = NEW;
     }
 
     public String toString(){
