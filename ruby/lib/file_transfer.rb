@@ -6,6 +6,8 @@ class FileTransfer
     CACHED = "Cached"
 
     def self.send(socket,files_or_paths)
+        # If they don't give us an array make it an array
+        files_or_paths = [files_or_paths].flatten
 
         # Say how many things we are going to send
         puts "Sending #{files_or_paths.length} files..."
