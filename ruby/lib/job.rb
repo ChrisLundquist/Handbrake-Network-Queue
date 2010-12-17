@@ -107,7 +107,12 @@ class Job
     end
 
     def relative_files_with_source_dir
-        folder = @source.split("/").last + "/"
+        pwd = Dir.pwd
+        Dir.chdir(@source)
+        # We do it this way so it works on all platforms. @source might have \ instead of /
+        folder = Dir.pwd.split("/").last + "/"
+        Dir.chdir(pwd)
+
         relative_files.map do |file|
             folder + file.sub("./","")
         end
@@ -133,7 +138,12 @@ class Job
     end
 
     def relative_dirs_with_source_dir
-        folder = @source.split("/").last + "/"
+        pwd = Dir.pwd
+        Dir.chdir(@source)
+        # We do it this way so it works on all platforms. @source might have \ instead of /
+        folder = Dir.pwd.split("/").last + "/"
+        Dir.chdir(pwd)
+
         dirs = relative_dirs.map do |dir|
             folder + dir.sub("./","")
         end

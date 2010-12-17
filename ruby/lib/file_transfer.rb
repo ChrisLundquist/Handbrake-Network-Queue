@@ -97,13 +97,11 @@ class FileTransfer
             size = socket.gets.to_i
 
             block_size = socket.gets.to_i
-            buffer = nil
             begin
                 # Integer math intentional
                 (size / block_size).times do
-                    # Read a block at a time
-                    buffer = socket.read(block_size)
-                    file.write(buffer)
+                    # Read a block at a time and write it to the file
+                    file.write(socket.read(block_size))
                 end
 
                 # Read the rest of the file
