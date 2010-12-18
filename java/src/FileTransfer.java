@@ -51,7 +51,7 @@ public class FileTransfer{
                 // Accept the file
                 server.println(ACCEPT);
                 server.flush();
-                DataOutputStream binWriter = new DataOutputStream(new FileOutputStream(file));
+                BufferedOutputStream binWriter = new BufferedOutputStream(new FileOutputStream(file));
                 // Read this files size
                 long fileSize = Integer.parseInt(readLine(socket));
 
@@ -70,6 +70,7 @@ public class FileTransfer{
                     //System.out.println(bytesLeft + " bytes left");
                 }
                 binWriter.flush();
+                binWriter.close();
                 System.out.println("Done with " + fileName);
             }
         } catch (IOException e) {
