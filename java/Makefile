@@ -10,9 +10,9 @@ bin/%.class: src/%.java bin
 
 all: client server
 
-client: bin bin/Job.class bin/JobQueue.class bin/Client.class
+client: bin bin/Job.class bin/JobQueue.class bin/Client.class bin/FileTransfer.class
 
-server: bin bin/Job.class bin/JobQueue.class bin/Server.class bin/ServerThread.class
+server: bin bin/Job.class bin/JobQueue.class bin/Server.class bin/ServerThread.class bin/FileTransfer.class 
 
 bin:
 	mkdir bin/

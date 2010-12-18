@@ -48,6 +48,13 @@ public class Client {
         out.println(Command.CHECKOUT_JOB);
         // Send the id of our job
         out.println(job.getId());
+        
+        // Make the relative directories for the files
+        // about to be sent from the sever
+        FileTransfer.makeDirs(server);
+        
+        // Receive the files for the job from the server
+        FileTransfer.recv(server);
 
         //TODO copy the files
         disconnect();
