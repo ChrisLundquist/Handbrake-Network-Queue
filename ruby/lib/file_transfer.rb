@@ -42,10 +42,16 @@ class FileTransfer
                 when CACHED
                     puts "Remote Host already has file #{file_name} cached"
                     next
+                when ACCEPT
+                    puts "Remote host is accepting file #{file_name}"
                 else
+                    STDERR.puts "Unhandled signal in file transfer #{response}"
                 end
             when ACCEPT
-                # Do the below
+                puts "Remote host is accepting file #{file_name}"
+            when DECLINE
+                puts "Remote host declined file transfer of #{file_name}"
+                next
             else
                 STDERR.puts "Unhandled signal in file transfer #{response}"
             end
