@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Vector;
 
 public class FileTransfer{
     static public final String  DECLINE = "Decline";
@@ -12,7 +13,7 @@ public class FileTransfer{
     static public final String EXISTS = "Exists";
 
 
-    public static void send(Socket socket, String[] file_paths){
+    public static void send(Socket socket, Vector<String> vector){
     }
 
     public static void recv(Socket socket) {
@@ -78,7 +79,7 @@ public class FileTransfer{
         }
     }
 
-    public static void sendDirs(Socket socket, String[] dirNames){
+    public static void sendDirs(Socket socket, Vector<String> vector){
         PrintWriter out = null;
         try {
             out = new PrintWriter(socket.getOutputStream());
@@ -87,8 +88,9 @@ public class FileTransfer{
             System.exit(-14);
         }
         // Tell the client how many dirs we are going to send
-        out.println(dirNames.length);
-        for(String dirName : dirNames){
+        out.println(vector.size());
+        for(String dirName : vector){
+            System.out.println("sending dir " + dirName);
             // Print each dirname to the client
             out.println(dirName);
             out.flush();

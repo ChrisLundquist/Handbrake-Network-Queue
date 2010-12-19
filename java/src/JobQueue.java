@@ -83,14 +83,22 @@ public class JobQueue {
     }
 
     public Job checkout(int id) {
-        for(int i = 0; i < queue.size(); i++) {
-            Job job = queue.get(i);
+        for(Job job : queue){
             if(job.getId() == id){
                 job.checkout();
                 return job;
             }
         }
-        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public Job complete(int id) {
+        for(Job job : queue){
+            if(job.getId() == id){
+                job.complete();
+                return job;
+            }
+        }
         return null;
     }
 }

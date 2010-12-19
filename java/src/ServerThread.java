@@ -91,6 +91,8 @@ class ServerThread extends Thread {
     private void completeJob() {
         // The first thing we read is the ID of the job being checked out
         int id = readID();
+        FileTransfer.recv(client);
+        queue.complete(id);
         System.out.println(client.getRemoteSocketAddress() + " has completed job ID " + id);
     }
 

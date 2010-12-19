@@ -1,6 +1,9 @@
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Vector;
 
 import org.w3c.dom.NodeList;
 
@@ -34,7 +37,6 @@ public class Job {
     
     //
     public static void send(PrintWriter out, Job job ){
-        System.out.println(job.toString());
         out.println(job.id);
         out.flush();
         out.println(job.query);
@@ -88,7 +90,6 @@ public class Job {
         "Last Checkout: " + (getLastCheckOut() > 0 ? getLastCheckOut() + " seconds" : "N/A"); 
     }
 
-    // TODO error handling
     public boolean checkout(){
         // Don't checkout a job that we don't want to do
         // or has already been finished
@@ -158,13 +159,49 @@ public class Job {
         this.destination = destination;
     }
 
-    public String[] relativeDirsWithSourceDir() {
-        // TODO Auto-generated method stub
-        return null;
+    public Vector<String> getDirs(String path){
+        java.util.Vector<String> dirNames = new java.util.Vector<String>();
+        File dir = new File(path);
+        
+        // List all the Dirs in this one
+        File[] dirs = dir.listFiles(new DirFilter());
+        
+        for(File d : dirs){ // add all the dirs in all the lower dirs
+            dirNames.add(d.getPath());
+            dirNames.addAll(getDirs(d.getPath()));
+        }
+        return dirNames;
+    }
+    
+    public Vector<String> relativeDirsWithSourceDir() {
+        java.util.Vector<String> dirNames = new java.util.Vector<String>();
+        dirNames.add(source); // add the source dir
+        dirNames.addAll(getDirs(source)); // add all the dirs under me
+        return dirNames;
     }
 
-    public String[] relativeFilesWithSourceDir() {
-        // TODO Auto-generated method stub
-        return null;
+    public Vector<String> relativeFilesWithSourceDir() {
+        java.util.Vector<String> fileNames = new java.util.Vector<String>();
+        
+        Vector<String> dirs = relativeDirsWithSourceDir();
+        
+        for(String dir : dirs){
+            for(File file : new File(dir).listFiles())
+                fileNames.add(file.getPath());
+        }
+        return fileNames;
+    }
+    
+    private class DirFilter implements FileFilter {
+        @Override
+        public boolean accept(File file) {
+            return file.isDirectory();
+        }
+        
+    }
+
+    public Job complete() {
+        status = COMPLETE;
+        return this;
     }
 }
