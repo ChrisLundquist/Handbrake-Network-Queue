@@ -79,7 +79,20 @@ public class FileTransfer{
     }
 
     public static void sendDirs(Socket socket, String[] dirNames){
-
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter(socket.getOutputStream());
+        } catch (IOException e) {
+            System.err.println("Cannot get output stream of socket");
+            System.exit(-14);
+        }
+        // Tell the client how many dirs we are going to send
+        out.println(dirNames.length);
+        for(String dirName : dirNames){
+            // Print each dirname to the client
+            out.println(dirName);
+            out.flush();
+        }   
     }
 
     public static void makeDirs(Socket socket){

@@ -34,10 +34,15 @@ public class Job {
     
     //
     public static void send(PrintWriter out, Job job ){
+        System.out.println(job.toString());
         out.println(job.id);
+        out.flush();
         out.println(job.query);
+        out.flush();
         out.println(job.source);
+        out.flush();
         out.println(job.destination);
+        out.flush();
     }
     
     public static Job recv(BufferedReader in){
@@ -151,5 +156,15 @@ public class Job {
 
     public void setDestination(String destination){
         this.destination = destination;
+    }
+
+    public String[] relativeDirsWithSourceDir() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public String[] relativeFilesWithSourceDir() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

@@ -66,19 +66,32 @@ class ServerThread extends Thread {
         if(job == null){
             // Tell them that we have no job
             out.println(Command.NO_JOB);
+        }else{
+            out.println(Command.HAVE_JOB);
+        }
+        try {
+            Job.send(new PrintWriter(client.getOutputStream()), job);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
     private void checkoutJob() {
+        // The first thing we read is the ID of the job being checked out
         int id = readID();
         System.out.println(client.getRemoteSocketAddress() + " has checked out job ID " + id);
-        // The first thing we read is the ID of the job being checked out
+        
+        Job job = queue.checkout(id);
+        FileTransfer.sendDirs(client, job.relativeDirsWithSourceDir());
+        
+        FileTransfer.send(client, job.relativeFilesWithSourceDir());
     }
 
     private void completeJob() {
+        // The first thing we read is the ID of the job being checked out
         int id = readID();
         System.out.println(client.getRemoteSocketAddress() + " has completed job ID " + id);
-        // The first thing we read is the ID of the job being checked out
     }
 
     private int readID(){

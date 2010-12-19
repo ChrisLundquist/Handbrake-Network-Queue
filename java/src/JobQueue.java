@@ -81,4 +81,16 @@ public class JobQueue {
         System.out.println("Queue file parsed");
         return doc;
     }
+
+    public Job checkout(int id) {
+        for(int i = 0; i < queue.size(); i++) {
+            Job job = queue.get(i);
+            if(job.getId() == id){
+                job.checkout();
+                return job;
+            }
+        }
+        // TODO Auto-generated method stub
+        return null;
+    }
 }
