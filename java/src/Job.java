@@ -34,7 +34,7 @@ public class Job {
     private String query;
     private String source;
     private String destination;
-    
+
     //
     public static void send(PrintWriter out, Job job ){
         out.println(job.id);
@@ -46,10 +46,10 @@ public class Job {
         out.println(job.destination);
         out.flush();
     }
-    
+
     public static Job recv(BufferedReader in){
         Job job = new Job();
-        
+
         try {
             job.id = Integer.parseInt(in.readLine());
             job.query = in.readLine();
@@ -62,16 +62,16 @@ public class Job {
             System.err.println("Socket read error when receiving Job");
             System.exit(-3);
         }
-        
+
         return job;
     }
-    
+
 
     public Job(){
         lastCheckedOut = 0;
         status = NEW;
     }
-    
+
     public Job(NodeList nodeList) throws NullPointerException {
         this(); // Set our defaults
 
@@ -162,17 +162,17 @@ public class Job {
     public Vector<String> getDirs(String path){
         java.util.Vector<String> dirNames = new java.util.Vector<String>();
         File dir = new File(path);
-        
+
         // List all the Dirs in this one
         File[] dirs = dir.listFiles(new DirFilter());
-        
+
         for(File d : dirs){ // add all the dirs in all the lower dirs
             dirNames.add(d.getPath());
             dirNames.addAll(getDirs(d.getPath()));
         }
         return dirNames;
     }
-    
+
     public Vector<String> relativeDirsWithSourceDir() {
         java.util.Vector<String> dirNames = new java.util.Vector<String>();
         dirNames.add(source); // add the source dir
@@ -182,22 +182,23 @@ public class Job {
 
     public Vector<String> relativeFilesWithSourceDir() {
         java.util.Vector<String> fileNames = new java.util.Vector<String>();
-        
+
         Vector<String> dirs = relativeDirsWithSourceDir();
-        
+
         for(String dir : dirs){
             for(File file : new File(dir).listFiles())
-                fileNames.add(file.getPath());
+                if(file.isDirectory() == false)
+                    fileNames.add(file.getPath());
         }
         return fileNames;
     }
-    
+
     private class DirFilter implements FileFilter {
         @Override
         public boolean accept(File file) {
             return file.isDirectory();
         }
-        
+
     }
 
     public Job complete() {

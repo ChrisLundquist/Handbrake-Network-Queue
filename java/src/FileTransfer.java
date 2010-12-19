@@ -7,13 +7,60 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Vector;
 
 public class FileTransfer{
-    static public final String  DECLINE = "Decline";
+    static public final String DECLINE = "Decline";
     static public final String ACCEPT = "Accept";
     static public final String CACHED = "Cached";
     static public final String EXISTS = "Exists";
 
-
     public static void send(Socket socket, Vector<String> vector){
+        System.out.println("Sending " + vector.size() + " files");
+        try {
+            PrintWriter server = new PrintWriter(socket.getOutputStream());
+            // Tell them how many files
+            server.println(vector.size());
+            server.flush();
+            for(String fileName : vector){
+                server.println(fileName);
+                server.flush();
+
+                String response = readLine(socket);
+                File file = new File(fileName);
+                if(response.equals(EXISTS)){
+                    server.println(getMD5Digest(file));
+                    server.flush();
+                    response = readLine(socket);
+                    
+                    if(response.equals(CACHED) || response.equals(DECLINE))
+                        continue; // They don't want or need this file, go to the next
+                }else if(response.equals(ACCEPT)){
+                    // send the file as normal
+                }
+                
+                long fileSize = file.length();
+                long bytesRead = 0;
+                byte[] buffer = new byte[4096];
+                
+                server.println(fileSize);
+                server.flush();
+                server.println(buffer.length);
+                server.flush();
+                
+                System.out.println("Transfering " + fileName);
+                BufferedInputStream reader = new BufferedInputStream(new FileInputStream(file));
+                while(bytesRead < fileSize){
+                    bytesRead += reader.read(buffer);
+                    socket.getOutputStream().write(buffer);
+                }
+                socket.getOutputStream().flush();
+                System.out.println("Done Transfering " + fileName);
+                
+                
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
     public static void recv(Socket socket) {
@@ -33,21 +80,17 @@ public class FileTransfer{
                     System.out.println("File " + file + " already exists");
                     server.println(EXISTS);
                     server.flush();
-                    try {
-                        // Get what the server computes for the digest of the file
-                        String hexdigest = readLine(socket);
+                    // Get what the server computes for the digest of the file
+                    String hexdigest = readLine(socket);
+                    String ourHexDigest = getMD5Digest(file);
 
-                        MessageDigest md = MessageDigest.getInstance("MD5");
-                        // TODO see if we can md5 the file we have.
-                        if(MessageDigest.isEqual(hexdigest.getBytes(), md.digest())){
-                            System.out.println("Already have file " + fileName + " Cached...skipping");
-                            server.println(CACHED);
-                            server.flush();
-                            continue;
-                        }
-                    } catch (NoSuchAlgorithmException e) {
-                        System.err.println("Your machine doesn't support MD5. Thats amazing.");
+                    if(hexdigest.equals(ourHexDigest)){
+                        System.out.println("Already have file " + fileName + " Cached...skipping");
+                        server.println(CACHED);
+                        server.flush();
+                        continue;
                     }
+
                 }
                 // Accept the file
                 server.println(ACCEPT);
@@ -62,7 +105,7 @@ public class FileTransfer{
 
                 long bytesLeft = fileSize;
                 int read = 0;
-                
+
                 while(bytesLeft != 0){
                     // Read the min of the bytesLeft and blocksize
                     read = socket.getInputStream().read(buffer, 0, bytesLeft < blockSize ? (int)bytesLeft : blockSize );
@@ -77,6 +120,49 @@ public class FileTransfer{
         } catch (IOException e) {
             System.err.println("Socket I/O Error when transfering file ");
         }
+    }
+
+    private static String getMD5Digest(File file) {
+        BufferedInputStream reader = null;
+        String hexDigest = null;
+        try {
+            reader = new BufferedInputStream( new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        byte[] buffer = new byte[4096];
+        long fileLength = file.length();
+        long bytesRead = 0;
+
+        //Read our file into the md buffer
+        while(bytesRead < fileLength){
+            try {
+                bytesRead += reader.read(buffer);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            md.update(buffer); 
+        }
+        byte[] digest = md.digest();
+        for (int i=0;i< digest.length;i++) {
+            hexDigest += (Integer.toHexString(0xFF & digest[i]));
+        }
+        try {
+            reader.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return hexDigest;
     }
 
     public static void sendDirs(Socket socket, Vector<String> vector){
@@ -126,7 +212,7 @@ public class FileTransfer{
     private static String readLine(Socket socket){
         String line = new String();
         int c;
-        
+
         try {
             while((c = socket.getInputStream().read()) != '\n'){
                 line += (char) c;
