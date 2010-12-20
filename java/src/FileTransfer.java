@@ -18,7 +18,6 @@ public class FileTransfer{
             PrintWriter server = new PrintWriter(socket.getOutputStream());
             // Tell them how many files
             server.println(vector.size());
-            server.flush();
             for(String fileName : vector){
                 server.println(fileName);
                 server.flush();
@@ -29,38 +28,35 @@ public class FileTransfer{
                     server.println(getMD5Digest(file));
                     server.flush();
                     response = readLine(socket);
-                    
+
                     if(response.equals(CACHED) || response.equals(DECLINE))
                         continue; // They don't want or need this file, go to the next
                 }else if(response.equals(ACCEPT)){
                     // send the file as normal
                 }
-                
+
                 long fileSize = file.length();
                 long bytesRead = 0;
+                int read = 0;
                 byte[] buffer = new byte[4096];
-                
+
                 server.println(fileSize);
-                server.flush();
                 server.println(buffer.length);
                 server.flush();
-                
+
                 System.out.println("Transfering " + fileName);
                 BufferedInputStream reader = new BufferedInputStream(new FileInputStream(file));
                 while(bytesRead < fileSize){
-                    bytesRead += reader.read(buffer);
-                    socket.getOutputStream().write(buffer);
+                    read = reader.read(buffer);
+                    socket.getOutputStream().write(buffer,0,read);
+                    bytesRead += read;
                 }
                 socket.getOutputStream().flush();
                 System.out.println("Done Transfering " + fileName);
-                
-                
             }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
     }
 
     public static void recv(Socket socket) {
@@ -128,14 +124,12 @@ public class FileTransfer{
         try {
             reader = new BufferedInputStream( new FileInputStream(file));
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         byte[] buffer = new byte[4096];
@@ -147,7 +141,6 @@ public class FileTransfer{
             try {
                 bytesRead += reader.read(buffer);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             md.update(buffer); 
@@ -159,7 +152,6 @@ public class FileTransfer{
         try {
             reader.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return hexDigest;

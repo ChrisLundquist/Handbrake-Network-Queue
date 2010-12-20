@@ -35,7 +35,14 @@ public class Client {
         // Send the id of our job
         out.println(job.getId());
 
-        //TODO send the completed job back over
+        // At the moment we only ever output one file but there is no need to
+        // limit ourself.
+        java.util.Vector<String> files = new java.util.Vector<String>();
+        files.add(job.getDestination());
+        
+        // send the completed job back over
+        FileTransfer.send(server,files);
+
         disconnect();
     }
 
@@ -48,15 +55,14 @@ public class Client {
         out.println(Command.CHECKOUT_JOB);
         // Send the id of our job
         out.println(job.getId());
-        
+
         // Make the relative directories for the files
         // about to be sent from the sever
         FileTransfer.makeDirs(server);
-        
+
         // Receive the files for the job from the server
         FileTransfer.recv(server);
 
-        //TODO copy the files
         disconnect();
     }
 

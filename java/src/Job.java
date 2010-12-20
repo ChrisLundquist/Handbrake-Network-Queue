@@ -38,11 +38,8 @@ public class Job {
     //
     public static void send(PrintWriter out, Job job ){
         out.println(job.id);
-        out.flush();
         out.println(job.query);
-        out.flush();
         out.println(job.source);
-        out.flush();
         out.println(job.destination);
         out.flush();
     }
