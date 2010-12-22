@@ -77,16 +77,15 @@ public class FileTransfer{
                     server.println(EXISTS);
                     server.flush();
                     // Get what the server computes for the digest of the file
-                    String hexdigest = readLine(socket);
+                    String hexDigest = readLine(socket);
                     String ourHexDigest = getMD5Digest(file);
 
-                    if(hexdigest.equals(ourHexDigest)){
+                    if(hexDigest.equals(ourHexDigest)){
                         System.out.println("Already have file " + fileName + " Cached...skipping");
                         server.println(CACHED);
                         server.flush();
                         continue;
                     }
-
                 }
                 // Accept the file
                 server.println(ACCEPT);
@@ -120,7 +119,7 @@ public class FileTransfer{
 
     private static String getMD5Digest(File file) {
         BufferedInputStream reader = null;
-        String hexDigest = null;
+        String hexDigest = new String();
         try {
             reader = new BufferedInputStream( new FileInputStream(file));
         } catch (FileNotFoundException e) {
@@ -134,20 +133,22 @@ public class FileTransfer{
         }
         byte[] buffer = new byte[4096];
         long fileLength = file.length();
-        long bytesRead = 0;
+        long bytesLeft = fileLength;
+        int  read = 0;
 
         //Read our file into the md buffer
-        while(bytesRead < fileLength){
+        while(bytesLeft > 0){
             try {
-                bytesRead += reader.read(buffer);
+                read = reader.read(buffer,0, bytesLeft < buffer.length ? (int)bytesLeft : buffer.length);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            md.update(buffer); 
+            md.update(buffer,0,read);
+            bytesLeft -= read;
         }
         byte[] digest = md.digest();
-        for (int i=0;i< digest.length;i++) {
-            hexDigest += (Integer.toHexString(0xFF & digest[i]));
+        for (int i = 0; i < digest.length;i++) {
+            hexDigest += String.format("%02x" ,0xFF & digest[i]);
         }
         try {
             reader.close();
@@ -171,8 +172,8 @@ public class FileTransfer{
             System.out.println("sending dir " + dirName);
             // Print each dirname to the client
             out.println(dirName);
-            out.flush();
         }   
+        out.flush();
     }
 
     public static void makeDirs(Socket socket){

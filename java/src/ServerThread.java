@@ -21,23 +21,23 @@ class ServerThread extends Thread {
             System.exit(-2);
         }
 
-        String inputLine;
-        while ((inputLine = FileTransfer.readLine(client)) != null){
-            switch(Command.getCommandType(inputLine)){
-            case GET_JOB:
-                getJob();
-                break;
-            case CHECKOUT_JOB:
-                checkoutJob();
-                break;
-            case COMPLETE_JOB:
-                completeJob();
-                break;
-            default:
-                System.err.println("Error: Unkown Command: " + inputLine);
-                System.err.println("Continuing...");
-            }
+        String command = FileTransfer.readLine(client);
+
+        switch(Command.getCommandType(command)){
+        case GET_JOB:
+            getJob();
+            break;
+        case CHECKOUT_JOB:
+            checkoutJob();
+            break;
+        case COMPLETE_JOB:
+            completeJob();
+            break;
+        default:
+            System.err.println("Error: Unkown Command: " + command);
+            System.err.println("Continuing...");
         }
+
         clean();
     }
 
@@ -51,7 +51,7 @@ class ServerThread extends Thread {
     }
 
     private void getJob() {
-        System.out.println( client.getRemoteSocketAddress() + " has requested a job");		
+        System.out.println( client.getRemoteSocketAddress() + " has requested a job");
         Job job = queue.getNextJob();
         if(job == null){
             // Tell them that we have no job
@@ -64,16 +64,17 @@ class ServerThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("Sent Job ID " + job.getId());
     }
 
     private void checkoutJob() {
         // The first thing we read is the ID of the job being checked out
         int id = readID();
         System.out.println(client.getRemoteSocketAddress() + " has checked out job ID " + id);
-        
+
         Job job = queue.checkout(id);
         FileTransfer.sendDirs(client, job.relativeDirsWithSourceDir());
-        
+
         FileTransfer.send(client, job.relativeFilesWithSourceDir());
     }
 
