@@ -3,7 +3,6 @@ import java.io.*;
 class ServerThread extends Thread {
     private Socket client;
     private PrintWriter out;
-    private BufferedReader in;
     private JobQueue queue;
 
     ServerThread(Socket client, JobQueue queue){
@@ -16,7 +15,6 @@ class ServerThread extends Thread {
         try {
             // Java stupidity declaring objects for objects
             out = new PrintWriter( client.getOutputStream(), true);
-            in = new BufferedReader( new InputStreamReader( client.getInputStream())); 
         } catch(IOException e){
             System.err.println("Failed to allocate resources to use Socket");
             System.err.println(e);
@@ -24,35 +22,27 @@ class ServerThread extends Thread {
         }
 
         String inputLine;
-        try {
-            while ((inputLine = in.readLine()) != null){
-                switch(Command.getCommandType(inputLine)){
-                case GET_JOB:
-                    getJob();
-                    break;
-                case CHECKOUT_JOB:
-                    checkoutJob();
-                    break;
-                case COMPLETE_JOB:
-                    completeJob();
-                    break;
-                default:
-                    System.err.println("Error: Unkown Command: " + inputLine);
-                    System.err.println("Continuing...");
-                }
-                out.println("ack");
+        while ((inputLine = FileTransfer.readLine(client)) != null){
+            switch(Command.getCommandType(inputLine)){
+            case GET_JOB:
+                getJob();
+                break;
+            case CHECKOUT_JOB:
+                checkoutJob();
+                break;
+            case COMPLETE_JOB:
+                completeJob();
+                break;
+            default:
+                System.err.println("Error: Unkown Command: " + inputLine);
+                System.err.println("Continuing...");
             }
-        } catch(IOException e){
-            System.err.println("Exception while reading from socket");
-            System.err.println(e);
-            System.err.println("Continuing...");
         }
         clean();
     }
 
     private void clean() {
         try {
-            in.close();
             out.close();
             client.close();
         } catch (IOException e) {
@@ -72,7 +62,6 @@ class ServerThread extends Thread {
         try {
             Job.send(new PrintWriter(client.getOutputStream()), job);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -98,12 +87,9 @@ class ServerThread extends Thread {
 
     private int readID(){
         try {
-            return Integer.parseInt(in.readLine());
+            return Integer.parseInt(FileTransfer.readLine(client));
         } catch (NumberFormatException e) {
             System.err.println("Unable to parse ID when reading from socket");
-            System.err.println("Continuing...");
-        } catch (IOException e) {
-            System.err.println("IOException when reading job ID from socket");
             System.err.println("Continuing...");
         }
         return -1;

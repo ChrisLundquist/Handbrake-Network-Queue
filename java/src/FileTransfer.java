@@ -201,7 +201,7 @@ public class FileTransfer{
             System.err.println(e);
         }
     }
-    private static String readLine(Socket socket){
+    public static String readLine(Socket socket){
         String line = new String();
         int c;
 

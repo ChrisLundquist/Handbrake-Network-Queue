@@ -48,6 +48,11 @@ public class Client {
 
     private void doJob() {
         //TODO execute the job
+        try {
+            Runtime.getRuntime().exec("HandBrakeCLI " + job.getQuery());
+        } catch (IOException e) {
+            System.err.println("Unable to run job");
+        }
     }
 
     private void checkoutJob() {
@@ -120,14 +125,15 @@ public class Client {
             System.err.println("Warning: Extra arguments passed, ignoring");
         }
 
-        System.out.println("Connecting to " + args[0]);
-        Client client = null;
-        if(args.length == 2) {
-            System.out.println("Using port " + args[1]);
-            client = new Client(args[0],Integer.parseInt(args[1]));
-        } else {
-            client = new Client(args[0]);
+        String host = args[0];
+        int port = DEFAULT_PORT;
+
+        if(args.length >= 2) {
+            port = Integer.parseInt(args[1]);
         }
-        client.start();
+        
+        System.out.println("Connecting to " + host);
+        System.out.println("Using port " + port);
+        new Client(host,port).start();
     }
 }
