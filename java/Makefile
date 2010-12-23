@@ -15,8 +15,8 @@ client: bin bin/Job.class bin/JobQueue.class bin/Client.class bin/FileTransfer.c
 server: bin bin/Job.class bin/JobQueue.class bin/Server.class bin/ServerThread.class bin/FileTransfer.class 
 
 jar: client server
-	jar cfe HBNQServer Server bin/Server.class bin/Job.class bin/JobQueue.class bin/ServerThread.class bin/FileTransfer.class
-	jar cfe HBNQClient Client bin/Client.class bin/Job.class bin/JobQueue.class bin/FileTransfer.class
+	cd bin; jar cfe HBNQServer Server Server.class Job.class JobQueue.class ServerThread.class FileTransfer.class; mv HBNQServer ..
+	cd bin; jar cfe HBNQClient Client Client.class Job.class JobQueue.class FileTransfer.class; mv HBNQClient ..
 
 bin:
 	mkdir bin/
